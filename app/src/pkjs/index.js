@@ -25,3 +25,10 @@ var leagues = new UI.Menu({
 });
 
 leagues.show();
+
+leagues.selection(function(e) {
+  var card = new UI.Card({
+  title: 'Hello People!'
+});
+card.body('This is the content of my card!');
+})
