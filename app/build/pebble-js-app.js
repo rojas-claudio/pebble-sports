@@ -96,6 +96,7 @@
 	      title: 'Baseball',
 	    }, {
 	      title: 'Hockey',
+	      icon: 'hockey_puck.png'
 	    }, {
 	      title: 'Basketball',
 	    }, {
@@ -2934,7 +2935,7 @@
 /* 17 */
 /***/ (function(module, exports) {
 
-	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[]}}}
+	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[{"type":"png","name":"hockey_puck","file":"hockey_puck.png"}]}}}
 
 /***/ }),
 /* 18 */

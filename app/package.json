@@ -28,6 +28,11 @@
     ],
     "resources": {
       "media": [
+        {
+          "type": "png",
+          "name": "hockey_puck",
+          "file": "hockey_puck.png"
+        }
       ]
     }
   }

@@ -26,7 +26,13 @@
         "watchface": false
     }, 
     "resources": {
-        "media": []
+        "media": [
+            {
+                "type": "png", 
+                "name": "hockey_puck", 
+                "file": "hockey_puck.png"
+            }
+        ]
     }, 
     "uuid": "9e57a249-9a5c-4ded-b374-005a472b8049"
 }
