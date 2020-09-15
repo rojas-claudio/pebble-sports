@@ -6,7 +6,7 @@ const isSandbox = false;
 
 // Array with absolute file path strings
 const entryFilenames = ["_pkjs_shared_additions.js",
-"/mnt/e/Pebble Development/Github Repo/sports-app/src/pkjs/index.js"];
+"/mnt/e/Pebble Development/Github Repo/sports-app/app/src/pkjs/index.js"];
 
 // folder path string
 const outputPath = "build";
@@ -18,10 +18,10 @@ const outputFilename = "pebble-js-app.js";
 const resolveRoots = ["/home/dev/.pebble-sdk/SDKs/current/sdk-core/pebble/common/include",
 "/home/dev/.pebble-sdk/SDKs/current/sdk-core/pebble/common/tools/webpack",
 "/home/dev/.pebble-sdk/SDKs/current/node_modules",
-"/mnt/e/Pebble Development/Github Repo/sports-app/build/js"];
+"/mnt/e/Pebble Development/Github Repo/sports-app/app/build/js"];
 
 // Object, { alias1: 'path1', ... }
-const resolveAliases = {"app_package.json": "/mnt/e/Pebble Development/Github Repo/sports-app/package.json",
+const resolveAliases = {"app_package.json": "/mnt/e/Pebble Development/Github Repo/sports-app/app/package.json",
 "pebblejs": "pebblejs/dist/js"};
 
 // null or Object with key 'sourceMapFilename'
