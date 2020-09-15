@@ -12,15 +12,19 @@ var leagues = new UI.Menu({
       title: 'Favorites',
     }, {
       title: 'Football',
+      icon: 'american_football.png'
     }, {
       title: 'Baseball',
+      icon: 'baseball.png'
     }, {
       title: 'Hockey',
       icon: 'hockey_puck.png'
     }, {
       title: 'Basketball',
+      icon: 'basketball.png'
     }, {
       title: 'Soccer',
+      icon: 'soccer_ball.png'
     }]
   }]
 });

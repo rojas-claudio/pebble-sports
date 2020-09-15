@@ -92,15 +92,19 @@
 	      title: 'Favorites',
 	    }, {
 	      title: 'Football',
+	      icon: 'american_football.png'
 	    }, {
 	      title: 'Baseball',
+	      icon: 'baseball.png'
 	    }, {
 	      title: 'Hockey',
 	      icon: 'hockey_puck.png'
 	    }, {
 	      title: 'Basketball',
+	      icon: 'basketball.png'
 	    }, {
 	      title: 'Soccer',
+	      icon: 'soccer_ball.png'
 	    }]
 	  }]
 	});
@@ -2935,7 +2939,7 @@
 /* 17 */
 /***/ (function(module, exports) {
 
-	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[{"type":"png","name":"hockey_puck","file":"hockey_puck.png"}]}}}
+	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[{"type":"png","name":"hockey_puck","file":"hockey_puck.png"},{"type":"png","name":"soccer_ball","file":"soccer_ball.png"},{"type":"png","name":"basketball","file":"basketball.png"},{"type":"png","name":"baseball","file":"baseball.png"},{"type":"png","name":"american_football","file":"american_football.png"}]}}}
 
 /***/ }),
 /* 18 */
