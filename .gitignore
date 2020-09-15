@@ -1,0 +1,4 @@
+./app/build
+./app/node_modules
+./app/.lock-waf_linux2_build
+./wscript
