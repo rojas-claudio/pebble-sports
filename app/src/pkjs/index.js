@@ -25,3 +25,11 @@ var leagues = new UI.Menu({
 });
 
 leagues.show();
+
+leagues.selection(function(e) {
+  console.log('Currently selected item is #' + e.itemIndex + ' of section #' + e.sectionIndex);
+  console.log('The item is titled "' + e.item.title + '"');
+
+  if (e.item.title == "NHL") {
+  }
+});
