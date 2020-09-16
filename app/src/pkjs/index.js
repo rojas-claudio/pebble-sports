@@ -9,8 +9,6 @@ var leagues = new UI.Menu({
   sections: [{
     title: 'Sports',
     items: [{
-      title: 'Favorites',
-    }, {
       title: 'Football',
       icon: 'american_football.png'
     }, {
