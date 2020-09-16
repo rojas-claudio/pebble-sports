@@ -20,9 +20,6 @@ var leagues = new UI.Menu({
     }, {
       title: 'MLB',
       icon: 'basketball.png'
-    }, {
-      title: 'Soccer',
-      icon: 'soccer_ball.png'
     }]
   }]
 });
