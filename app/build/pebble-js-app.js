@@ -87,18 +87,18 @@
 	  highlightBackgroundColor: 'vivid-cerulean',
 	  highlightTextColor: 'black',
 	  sections: [{
-	    title: 'Sports',
+	    title: 'Leagues',
 	    items: [{
-	      title: 'Football',
+	      title: 'NFL',
 	      icon: 'american_football.png'
 	    }, {
-	      title: 'Baseball',
+	      title: 'MLB',
 	      icon: 'baseball.png'
 	    }, {
-	      title: 'Hockey',
+	      title: 'NHL',
 	      icon: 'hockey_puck.png'
 	    }, {
-	      title: 'Basketball',
+	      title: 'MLB',
 	      icon: 'basketball.png'
 	    }, {
 	      title: 'Soccer',
@@ -117,13 +117,13 @@
 	//this function receives 'sport' which is a string variable. It should be the title of a menu item like Hockey
 	function getSportsData(sport) {
 	  var APIURL = '';
-	  if (sport == "Football") {
+	  if (sport == "NFL") {
 	    APIURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
-	  } else if (sport == "Hockey") {
+	  } else if (sport == "NHL") {
 	    APIURL = 'http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard';
-	  } else if (sport == "Baseball") {
+	  } else if (sport == "MLB") {
 	    APIURL = 'http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
-	  } else if (sport == "Basketball") {
+	  } else if (sport == "NBA") {
 	    APIURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
 	  } else if (sport == "Soccer") {
 	    APIURL = 'http://site.api.espn.com/apis/site/v2/sports/soccer/:league/scoreboard';
