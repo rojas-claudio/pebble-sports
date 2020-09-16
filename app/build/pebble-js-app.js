@@ -126,6 +126,7 @@
 	    //if the sport is football, we set the API URL to the football API.
 	    APIURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
 	  } else if (sport == "Hockey") {
+	    APIURL = 'http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard';
 	    //if the sport is hockey, we set the API URL to the hockey API.
 	    //find APIs here: https://gist.github.com/akeaswaran/b48b02f1c94f873c6655e7129910fc3b
 	
