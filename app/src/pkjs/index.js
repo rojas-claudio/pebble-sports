@@ -29,12 +29,49 @@ var leagues = new UI.Menu({
   }]
 });
 
+
+leagues.on('select', function(e) {
+  getSportsData(e.item.title);
+});
+
 leagues.show();
 
-leagues.selection(function(e) {
-  console.log('Currently selected item is #' + e.itemIndex + ' of section #' + e.sectionIndex);
-  console.log('The item is titled "' + e.item.title + '"');
+//this function receives 'sport' which is a string variable. It should be the title of a menu item like Hockey
+function getSportsData(sport) {
+  //lets make a blank varible called APIURL. This variable will be filled later with a real URL pointing to the appropriate API
+  var APIURL = '';
 
-  if (e.item.title == "NHL") {
+  //now let's check to see which sport the user selected
+  if (sport == "Football") {
+    //if the sport is football, we set the API URL to the football API.
+    APIURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
+  } else if (sport == "Hockey") {
+    APIURL = 'http://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'
+  } else {
+    console.log('need to add support for more sports!')
   }
-});
+
+//now this part is a little high level, but we are basically going to request data from the API
+//we will do this using an HTTP GET request
+//this function is built right into javascript and made available by the pebble sdk and runtime environment
+//the syntax is pretty tricky so don't think too hard about the section until you are ready
+//the important thing is that the 'sportsData' object will be where the sport data is stored!
+var req = new XMLHttpRequest();
+req.open('GET', APIURL, true);
+req.onload = function(e) {
+  if (req.readystate == 4) {
+    // 200 - HTTP OK
+    if(req.status == 200) {
+      var sportsData = JSON.parse(req.responseText); //<-- right here
+      //console.log(JSON.stringify(sportsData)); // let's log it to console to see what came from the API
+      var games = sportsData.events; // after exploring a bit I found that games are actually an array inside this events object
+      for (var i = 0; i < games.length; i++){
+        //this will loop through each game and show it's short name in the console
+        console.log(games[i].shortName);
+        //there is a lot more data to explore but we can get to that later
+            }
+          }
+        }
+      }
+  req.send();
+}
