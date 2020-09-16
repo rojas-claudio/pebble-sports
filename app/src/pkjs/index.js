@@ -4,7 +4,7 @@ var UI = require('pebblejs/ui');
 var leagues = new UI.Menu({
   backgroundColor: 'white',
   textColor: 'black',
-  highlightBackgroundColor: 'red',
+  highlightBackgroundColor: 'cadet-blue',
   highlightTextColor: 'white',
   sections: [{
     title: 'Leagues',
@@ -88,7 +88,7 @@ function showGamesMenu(sport, games){
   var gameMenu = new UI.Menu({
     backgroundColor: 'white',
     textColor: 'black',
-    highlightBackgroundColor: 'red',
+    highlightBackgroundColor: 'cadet-blue',
     highlightTextColor: 'white',
     sections: [{
       title: sport,

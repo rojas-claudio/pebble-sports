@@ -84,7 +84,7 @@
 	var leagues = new UI.Menu({
 	  backgroundColor: 'white',
 	  textColor: 'black',
-	  highlightBackgroundColor: 'red',
+	  highlightBackgroundColor: 'cadet-blue',
 	  highlightTextColor: 'white',
 	  sections: [{
 	    title: 'Leagues',
@@ -168,7 +168,7 @@
 	  var gameMenu = new UI.Menu({
 	    backgroundColor: 'white',
 	    textColor: 'black',
-	    highlightBackgroundColor: 'red',
+	    highlightBackgroundColor: 'cadet-blue',
 	    highlightTextColor: 'white',
 	    sections: [{
 	      title: sport,
