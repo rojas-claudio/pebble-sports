@@ -18,7 +18,7 @@ var leagues = new UI.Menu({
       title: 'NHL',
       icon: 'hockey_puck.png'
     }, {
-      title: 'MLB',
+      title: 'NBA',
       icon: 'basketball.png'
     }]
   }]
