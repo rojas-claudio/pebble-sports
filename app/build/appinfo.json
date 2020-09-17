@@ -1,0 +1,58 @@
+{
+    "targetPlatforms": [
+        "aplite", 
+        "basalt", 
+        "chalk", 
+        "diorite"
+    ], 
+    "displayName": "Sports", 
+    "name": "Sports", 
+    "messageKeys": {
+        "dummy": 10000
+    }, 
+    "companyName": "itsthered1", 
+    "enableMultiJS": true, 
+    "versionLabel": "0.0", 
+    "capabilities": [
+        "configurable"
+    ], 
+    "sdkVersion": "3", 
+    "appKeys": {
+        "dummy": 10000
+    }, 
+    "longName": "Sports", 
+    "shortName": "Sports", 
+    "watchapp": {
+        "watchface": false
+    }, 
+    "resources": {
+        "media": [
+            {
+                "type": "png", 
+                "name": "hockey_puck", 
+                "file": "hockey_puck.png"
+            }, 
+            {
+                "type": "png", 
+                "name": "soccer_ball", 
+                "file": "soccer_ball.png"
+            }, 
+            {
+                "type": "png", 
+                "name": "basketball", 
+                "file": "basketball.png"
+            }, 
+            {
+                "type": "png", 
+                "name": "baseball", 
+                "file": "baseball.png"
+            }, 
+            {
+                "type": "png", 
+                "name": "american_football", 
+                "file": "american_football.png"
+            }
+        ]
+    }, 
+    "uuid": "9e57a249-9a5c-4ded-b374-005a472b8049"
+}
