@@ -7,6 +7,7 @@
   ],
   "private": true,
   "dependencies": {
+    "pebble-clay": "^1.0.4",
     "pebblejs": "^1.0.0"
   },
   "pebble": {
@@ -32,19 +33,23 @@
           "type": "png",
           "name": "hockey_puck",
           "file": "hockey_puck.png"
-        }, {
+        },
+        {
           "type": "png",
           "name": "soccer_ball",
           "file": "soccer_ball.png"
-        }, {
+        },
+        {
           "type": "png",
           "name": "basketball",
           "file": "basketball.png"
-        }, {
+        },
+        {
           "type": "png",
           "name": "baseball",
           "file": "baseball.png"
-        }, {
+        },
+        {
           "type": "png",
           "name": "american_football",
           "file": "american_football.png"
