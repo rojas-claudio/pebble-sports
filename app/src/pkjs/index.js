@@ -1,5 +1,6 @@
-var UI = require('pebblejs/ui');
+require ('pebblejs');
 
+var UI = require('pebblejs/ui');
 
 var leagues = new UI.Menu({
   backgroundColor: 'white',

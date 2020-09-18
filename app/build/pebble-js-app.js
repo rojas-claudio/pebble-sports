@@ -78,14 +78,9 @@
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(3);
-	var UI = __webpack_require__(37);
-	Pebble.addEventListener('ready', function() {
-	  console.log('PebbleKit JS ready.');
+	__webpack_require__ (3);
 	
-	  // Update s_js_ready on watch
-	  Pebble.sendAppMessage({'JSReady': 1});
-	});
+	var UI = __webpack_require__(37);
 	
 	var leagues = new UI.Menu({
 	  backgroundColor: 'white',
