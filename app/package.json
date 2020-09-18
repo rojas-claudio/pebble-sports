@@ -9,7 +9,6 @@
   "dependencies": {
     "pebble-clay": "^1.0.4",
     "pebblejs": "^1.0.0",
-  "capabilities": [ "configurable" ]
   },
   "pebble": {
     "displayName": "Sports",
