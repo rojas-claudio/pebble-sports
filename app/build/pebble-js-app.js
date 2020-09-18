@@ -80,6 +80,12 @@
 
 	__webpack_require__(3);
 	var UI = __webpack_require__(37);
+	Pebble.addEventListener('ready', function() {
+	  console.log('PebbleKit JS ready.');
+	
+	  // Update s_js_ready on watch
+	  Pebble.sendAppMessage({'JSReady': 1});
+	});
 	
 	var leagues = new UI.Menu({
 	  backgroundColor: 'white',
@@ -145,6 +151,8 @@
 	              var sportsData = JSON.parse(req.responseText); //<-right here
 	              //console.log(JSON.stringify(sportsData)); // let's log it to console to see what came from the API
 	              var games = sportsData.events; // after exploring a bit I found that games are actually an array inside this events object
+	              var fullname = sportsData.name;
+	              var date = sportsData;
 	              // for (var i = 0; i < games.length; i++){
 	              //this will loop through each game and show it's short name in the console
 	              //console.log(games[i].shortName);
