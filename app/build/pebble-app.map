@@ -1001,7 +1001,6 @@ LOAD aplite/src/resource_ids.auto.c.33.o
 LOAD src/message_keys.auto.c.33.o
 LOAD /home/dev/.pebble-sdk/SDKs/current/sdk-core/pebble/aplite/lib/libpebble.a
 LOAD /mnt/e/Pebble Development/Github Repo/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a
-LOAD /mnt/e/Pebble Development/Github Repo/sports-app/app/node_modules/pebble-clay/dist/binaries/aplite/libpebble-clay.a
 START GROUP
 LOAD /mnt/c/users/iwill/pebble-dev/pebble-sdk-4.5-linux64/arm-cs-tools/bin/../lib/gcc/arm-none-eabi/4.7.2/thumb2/libgcc.a
 LOAD /mnt/c/users/iwill/pebble-dev/pebble-sdk-4.5-linux64/arm-cs-tools/bin/../lib/gcc/arm-none-eabi/4.7.2/../../../../arm-none-eabi/lib/thumb2/libc.a

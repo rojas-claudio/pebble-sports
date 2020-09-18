@@ -1,4 +1,4 @@
-# project  configured on Fri Sep 18 10:37:39 2020 by
+# project  configured on Thu Sep 17 20:21:27 2020 by
 # waf 1.7.11 (abi 98, python 20711f0 on linux2)
 # using /home/dev/.pebble-sdk/SDKs/current/sdk-core/pebble/waf configure
 #
@@ -12,4 +12,47 @@ Setting out to
 Checking for program webpack
 /home/dev/.pebble-sdk/SDKs/current/node_modules/.bin/webpack
 find program=['webpack'] paths=['/home/dev/.pebble-sdk/SDKs/current/node_modules/.bin'] var='WEBPACK' -> '/home/dev/.pebble-sdk/SDKs/current/node_modules/.bin/webpack'
-from /mnt/e/Pebble Development/Github Repo/sports-app/app: Missing library for capabilities in node_modules
+----------------------------------------
+Found Pebble SDK for diorite in:
+/home/dev/.pebble-sdk/SDKs/current/sdk-core/pebble/diorite
+----------------------------------------
+Checking for program gcc,cc
+arm-none-eabi-gcc
+find program=['gcc', 'cc'] paths='' var='CC' -> 'arm-none-eabi-gcc'
+----------------------------------------
+Checking for program ar
+arm-none-eabi-ar
+find program=['ar'] paths='' var='AR' -> 'arm-none-eabi-ar'
+----------------------------------------
+Found Pebble SDK for chalk in:
+/home/dev/.pebble-sdk/SDKs/current/sdk-core/pebble/chalk
+----------------------------------------
+Checking for program gcc,cc
+arm-none-eabi-gcc
+find program=['gcc', 'cc'] paths='' var='CC' -> 'arm-none-eabi-gcc'
+----------------------------------------
+Checking for program ar
+arm-none-eabi-ar
+find program=['ar'] paths='' var='AR' -> 'arm-none-eabi-ar'
+----------------------------------------
+Found Pebble SDK for basalt in:
+/home/dev/.pebble-sdk/SDKs/current/sdk-core/pebble/basalt
+----------------------------------------
+Checking for program gcc,cc
+arm-none-eabi-gcc
+find program=['gcc', 'cc'] paths='' var='CC' -> 'arm-none-eabi-gcc'
+----------------------------------------
+Checking for program ar
+arm-none-eabi-ar
+find program=['ar'] paths='' var='AR' -> 'arm-none-eabi-ar'
+----------------------------------------
+Found Pebble SDK for aplite in:
+/home/dev/.pebble-sdk/SDKs/current/sdk-core/pebble/aplite
+----------------------------------------
+Checking for program gcc,cc
+arm-none-eabi-gcc
+find program=['gcc', 'cc'] paths='' var='CC' -> 'arm-none-eabi-gcc'
+----------------------------------------
+Checking for program ar
+arm-none-eabi-ar
+find program=['ar'] paths='' var='AR' -> 'arm-none-eabi-ar'
