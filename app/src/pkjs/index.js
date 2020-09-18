@@ -1,6 +1,8 @@
-require ('pebblejs');
-
-var UI = require('pebblejs/ui');
+Pebble.addEventListener('ready', function() {
+ // PebbleKit JS is ready!
+ console.log('PebbleKit JS ready!'); });
+ require ('pebblejs');
+ var UI = require('pebblejs/ui');
 
 var leagues = new UI.Menu({
   backgroundColor: 'white',
