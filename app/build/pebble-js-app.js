@@ -79,10 +79,9 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	Pebble.addEventListener('ready', function() {
-	 // PebbleKit JS is ready!
-	 console.log('PebbleKit JS ready!'); });
-	 __webpack_require__ (3);
-	 var UI = __webpack_require__(37);
+	
+	__webpack_require__(3);
+	var UI = __webpack_require__(37);
 	
 	var leagues = new UI.Menu({
 	  backgroundColor: 'white',
@@ -184,6 +183,7 @@
 	  gameMenu.show();
 	
 	}
+	});
 
 
 /***/ }),
