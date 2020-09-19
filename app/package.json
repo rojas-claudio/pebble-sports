@@ -48,6 +48,11 @@
           "type": "png",
           "name": "american_football",
           "file": "american_football.png"
+        }, {
+          "menuIcon": true,
+          "type": "png",
+          "name": "menu_icon",
+          "file": "menu_icon.png"
         }
       ]
     }
