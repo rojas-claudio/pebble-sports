@@ -79,7 +79,6 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	Pebble.addEventListener('ready', function() {
-	
 	__webpack_require__(3);
 	var UI = __webpack_require__(37);
 	
@@ -181,6 +180,23 @@
 	  });
 	
 	  gameMenu.show();
+	
+	
+	
+	var gameInfo = new UI.Window();
+	var gameTitle = new UI.text({
+	  textAlign: 'center',
+	  text: games.fullname,
+	});
+	gameInfo.add(gameTitle);
+	
+	gameMenu.on('select', gameInfo.show());
+	
+	
+	
+	
+	
+	
 	
 	}
 	});
@@ -3005,7 +3021,7 @@
 /* 17 */
 /***/ (function(module, exports) {
 
-	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[{"type":"png","name":"hockey_puck","file":"hockey_puck.png"},{"type":"png","name":"soccer_ball","file":"soccer_ball.png"},{"type":"png","name":"basketball","file":"basketball.png"},{"type":"png","name":"baseball","file":"baseball.png"},{"type":"png","name":"american_football","file":"american_football.png"}]}}}
+	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[{"type":"png","name":"hockey_puck","file":"hockey_puck.png"},{"type":"png","name":"soccer_ball","file":"soccer_ball.png"},{"type":"png","name":"basketball","file":"basketball.png"},{"type":"png","name":"baseball","file":"baseball.png"},{"type":"png","name":"american_football","file":"american_football.png"},{"menuIcon":true,"type":"png","name":"menu_icon","file":"menu_icon.png"}]}}}
 
 /***/ }),
 /* 18 */

@@ -1,5 +1,4 @@
 Pebble.addEventListener('ready', function() {
-
 require('pebblejs');
 var UI = require('pebblejs/ui');
 
@@ -101,6 +100,23 @@ function showGamesMenu(sport, games){
   });
 
   gameMenu.show();
+
+
+//Please Note: Everything below this line is experimental; detailed game menus to come
+var gameInfo = new UI.Window();
+var gameTitle = new UI.text({
+  textAlign: 'center',
+  text: games.fullname,
+});
+gameInfo.add(gameTitle);
+
+gameMenu.on('select', gameInfo.show());
+
+
+
+
+
+
 
 }
 });
