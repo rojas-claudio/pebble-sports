@@ -5,8 +5,8 @@ var UI = require('pebblejs/ui');
 var leagues = new UI.Menu({
   backgroundColor: 'white',
   textColor: 'black',
-  highlightBackgroundColor: 'cadet-blue',
-  highlightTextColor: 'white',
+  highlightBackgroundColor: 'mint-green',
+  highlightTextColor: 'black',
   sections: [{
     title: 'Leagues',
     items: [{
@@ -21,6 +21,9 @@ var leagues = new UI.Menu({
     }, {
       title: 'NBA',
       icon: 'basketball.png'
+    }, {
+      title: 'Soccer',
+      icon: 'soccer_ball.png'
     }]
   }]
 });
@@ -88,11 +91,13 @@ function showGamesMenu(sport, games){
    }
    gameMenuItems.push(gameMenuItem);
   }
+
+
   var gameMenu = new UI.Menu({
     backgroundColor: 'white',
     textColor: 'black',
-    highlightBackgroundColor: 'cadet-blue',
-    highlightTextColor: 'white',
+    highlightBackgroundColor: 'mint-green',
+    highlightTextColor: 'black',
     sections: [{
       title: sport,
       items: gameMenuItems
@@ -103,19 +108,6 @@ function showGamesMenu(sport, games){
 
 
 //Please Note: Everything below this line is experimental; detailed game menus to come
-var gameInfo = new UI.Window();
-var gameTitle = new UI.text({
-  textAlign: 'center',
-  text: games.fullname,
-});
-gameInfo.add(gameTitle);
-
-gameMenu.on('select', gameInfo.show());
-
-
-
-
-
 
 
 }
