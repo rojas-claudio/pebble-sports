@@ -82,10 +82,11 @@
 	    __webpack_require__(3);
 	    var UI = __webpack_require__(37);
 	    var leagues = new UI.Menu({
-	        backgroundColor: 'dark-gray',
-	        textColor: 'white',
-	        highlightBackgroundColor: 'cobalt-blue',
-	        highlightTextColor: 'white',
+	      status: false,
+	        backgroundColor: 'white',
+	        textColor: 'black',
+	        highlightBackgroundColor: 'electric-blue',
+	        highlightTextColor: 'black',
 	        sections: [{
 	            items: [{
 	                title: 'Football',
@@ -145,8 +146,6 @@
 	                    //console.log(JSON.stringify(sportsData)); // let's log it to console to see what came from the API
 	                    var games = sportsData.events; // after exploring a bit I found that games are actually an array inside this events object
 	                    var fullname = sportsData.name;
-	                    //Try to fix this variable!
-	                    var isRecent = sportsData.recent;
 	                    // for (var i = 0; i < games.length; i++){
 	                    //this will loop through each game and show it's short name in the console
 	                    //console.log(games[i].shortName);
@@ -159,24 +158,25 @@
 	    }
 	
 	    function showGamesMenu(sport, games) {
+	        var games = [];
 	        var gameMenuItems = [];
 	        for (var i = 0; i < games.length; i++) {
 	            var gameMenuItem = {
 	                title: games[i].shortName,
-	                subtitle: games[i].competitions[0].competitors[1].score + " to " + games[i].competitions[0].competitors[0].score
+	                subtitle: games[i].competitions[0].competitors[1].score + " | " + games[i].competitions[0].competitors[0].score
 	            }
-	            /*Come back to this, try to get isRecent working!
-	            Keep getting "not defined" error :P*/
-	            if (isRecent == true) {
-	              gameMenuItems.push(gameMenuItem);
+	            if (games.events[i].competitions[0].recent) {
+	              games.push(gameMenuItems);
 	            }
-	
 	        }
+	
+	
 	        var gameMenu = new UI.Menu({
+	          status: false,
 	            backgroundColor: 'white',
 	            textColor: 'black',
-	            highlightBackgroundColor: 'cadet-blue',
-	            highlightTextColor: 'white',
+	            highlightBackgroundColor: 'electric-blue',
+	            highlightTextColor: 'black',
 	            sections: [{
 	                title: sport,
 	                items: gameMenuItems
