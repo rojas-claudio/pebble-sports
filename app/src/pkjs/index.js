@@ -26,13 +26,13 @@ Pebble.addEventListener('ready', function() {
 
 
     leagues.on('select', function(e) {
-        getdata(e.item.title);
+        getData(e.item.title);
     });
 
     leagues.show();
 
     //this function receives 'sport' which is a string variable. It should be the title of a menu item like Hockey
-    function getdata(sport) {
+    function getData(sport) {
         var APIURL = '';
         if (sport == "Football") {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
@@ -67,11 +67,10 @@ Pebble.addEventListener('ready', function() {
     }
 
     function showGamesMenu(sport, games) {
-        console.log("This function is working!");
         var gameMenuItems = [];
         for (var i = 0; i < games.length; i++) {
             var gameMenuItem = {
-                title: games[i].shortName,
+                title: games[i].name,
                 subtitle: games[i].competitions[0].competitors[1].score + " | " + games[i].competitions[0].competitors[0].score
             }
             gameMenuItems.push(gameMenuItem);
@@ -91,5 +90,22 @@ Pebble.addEventListener('ready', function() {
         });
 
         gameMenu.show();
+
+        gameMenu.on('select', function (e) {
+            gameInformation();
+        });
+    }
+
+    function gameInformation() {
+
+        console.log("OK, this listener is working!");
+        
+        var infoCard = new UI.Card({
+            title: 'Testing...',
+            body: 'This is working!',
+          });
+
+        infoCard.show();
+
     }
 });

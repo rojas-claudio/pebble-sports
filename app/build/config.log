@@ -1,13 +1,13 @@
-# project  configured on Thu Dec 17 18:31:38 2020 by
+# project  configured on Fri Dec 18 09:37:31 2020 by
 # waf 1.7.11 (abi 98, python 20712f0 on linux2)
 # using /home/claudio/.pebble-sdk/SDKs/current/sdk-core/pebble/waf configure
 #
 ----------------------------------------
 Setting top to
-/mnt/d/Development/Pebble Development/Github Repo/sports-app/app
+/mnt/d/Development/Pebble Development/Github Repositories/sports-app/app
 ----------------------------------------
 Setting out to
-/mnt/d/Development/Pebble Development/Github Repo/sports-app/app/build
+/mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/build
 ----------------------------------------
 Checking for program webpack
 /home/claudio/.pebble-sdk/SDKs/current/node_modules/.bin/webpack
