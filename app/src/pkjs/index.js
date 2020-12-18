@@ -70,8 +70,8 @@ Pebble.addEventListener('ready', function() {
         var gameMenuItems = [];
         for (var i = 0; i < games.length; i++) {
             var gameMenuItem = {
-                title: games[i].name,
-                subtitle: games[i].competitions[0].competitors[1].score + " | " + games[i].competitions[0].competitors[0].score
+                title: games[i].shortName,
+                subtitle: games[i].competitions[0].competitors[1].score + " to " + games[i].competitions[0].competitors[0].score
             }
             gameMenuItems.push(gameMenuItem);
         }
@@ -92,17 +92,16 @@ Pebble.addEventListener('ready', function() {
         gameMenu.show();
 
         gameMenu.on('select', function (e) {
-            gameInformation();
+            gameInformation(games[e.itemIndex]);
         });
     }
 
-    function gameInformation() {
-
-        console.log("OK, this listener is working!");
+    function gameInformation(game) {
         
         var infoCard = new UI.Card({
-            title: 'Testing...',
-            body: 'This is working!',
+            scrollable: true,
+            title: game.name,
+            body: game.competitions[0].type.abbreviation + "\n" + game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score + "\n" + game.competitions[0].venue.fullName + "\n" + game.competitions[0].venue.address.state + ", " + game.competitions[0].venue.address.country,
           });
 
         infoCard.show();
