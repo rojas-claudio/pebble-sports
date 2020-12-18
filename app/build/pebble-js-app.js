@@ -85,7 +85,7 @@
 	      status: false,
 	        backgroundColor: 'white',
 	        textColor: 'black',
-	        highlightBackgroundColor: 'electric-blue',
+	        highlightBackgroundColor: 'vivid-cerulean',
 	        highlightTextColor: 'black',
 	        sections: [{
 	            items: [{
@@ -106,13 +106,13 @@
 	
 	
 	    leagues.on('select', function(e) {
-	        getSportsData(e.item.title);
+	        getdata(e.item.title);
 	    });
 	
 	    leagues.show();
 	
 	    //this function receives 'sport' which is a string variable. It should be the title of a menu item like Hockey
-	    function getSportsData(sport) {
+	    function getdata(sport) {
 	        var APIURL = '';
 	        if (sport == "Football") {
 	            APIURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
@@ -123,33 +123,22 @@
 	        } else if (sport == "Basketball") {
 	            APIURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
 	        } else if (sport == "Soccer") {
-	            APIURL = 'http://site.api.espn.com/apis/site/v2/sports/soccer/:league/scoreboard';
-	            //if the sport is hockey, we set the API URL to the hockey API.
-	            //find APIs here: https://gist.github.com/akeaswaran/b48b02f1c94f873c6655e7129910fc3b
-	
+	            APIURL = 'http://site.api.espn.com/apis/site/v2/sports/soccer/league/scoreboard';
 	        } else {
 	            console.log('need to add support for more sports!');
 	        }
-	
-	        //now this part is a little high level, but we are basically going to request data from the API
-	        //we will do this using an HTTP GET request
-	        //this function is built right into javascript and made available by the pebble sdk and runtime environment
-	        //the syntax is pretty tricky so don't think too hard about the section until you are ready
-	        //the important thing is that the 'sportsData' object will be where the sport data is stored!
+	        
 	        var req = new XMLHttpRequest();
 	        req.open('GET', APIURL, true);
 	        req.onload = function(e) {
 	            if (req.readyState == 4) {
 	                // 200 - HTTP OK
 	                if (req.status == 200) {
-	                    var sportsData = JSON.parse(req.responseText); //<-right here
-	                    //console.log(JSON.stringify(sportsData)); // let's log it to console to see what came from the API
-	                    var games = sportsData.events; // after exploring a bit I found that games are actually an array inside this events object
-	                    var fullname = sportsData.name;
-	                    // for (var i = 0; i < games.length; i++){
-	                    //this will loop through each game and show it's short name in the console
-	                    //console.log(games[i].shortName);
-	                    //there is a lot more data to explore but we can get to that later
+	                    var data = JSON.parse(req.responseText);
+	                    var games = data.events; 
+	                    for (var i = 0; i < games.length; i++) {
+	                        console.log(games[i].name);
+	                    }
 	                    showGamesMenu(sport, games);
 	                }
 	            }
@@ -158,16 +147,14 @@
 	    }
 	
 	    function showGamesMenu(sport, games) {
-	        var games = [];
+	        console.log("This function is working!");
 	        var gameMenuItems = [];
 	        for (var i = 0; i < games.length; i++) {
 	            var gameMenuItem = {
 	                title: games[i].shortName,
 	                subtitle: games[i].competitions[0].competitors[1].score + " | " + games[i].competitions[0].competitors[0].score
 	            }
-	            if (games.events[i].competitions[0].recent) {
-	              games.push(gameMenuItems);
-	            }
+	            gameMenuItems.push(gameMenuItem);
 	        }
 	
 	
@@ -175,7 +162,7 @@
 	          status: false,
 	            backgroundColor: 'white',
 	            textColor: 'black',
-	            highlightBackgroundColor: 'electric-blue',
+	            highlightBackgroundColor: 'vivid-cerulean',
 	            highlightTextColor: 'black',
 	            sections: [{
 	                title: sport,
@@ -3007,7 +2994,7 @@
 /* 17 */
 /***/ (function(module, exports) {
 
-	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[{"type":"png","name":"hockey_puck","file":"hockey_puck.png"},{"type":"png","name":"soccer_ball","file":"soccer_ball.png"},{"type":"png","name":"basketball","file":"basketball.png"},{"type":"png","name":"baseball","file":"baseball.png"},{"type":"png","name":"american_football","file":"american_football.png"},{"menuIcon":true,"type":"png","name":"menu_icon","file":"menu_icon.png"}]}}}
+	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[{"type":"png","name":"hockey_puck","file":"hockey_puck.png"},{"type":"png","name":"soccer_ball","file":"soccer_ball.png"},{"type":"png","name":"basketball","file":"basketball.png"},{"type":"png","name":"baseball","file":"baseball.png"},{"type":"png","name":"american_football","file":"american_football.png"},{"menuIcon":true,"type":"png","name":"menu_icon","file":"menu_icon.png"},{"type":"png","name":"no_games","file":"no_games.png"}]}}}
 
 /***/ }),
 /* 18 */

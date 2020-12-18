@@ -57,6 +57,11 @@
                 "type": "png", 
                 "name": "menu_icon", 
                 "file": "menu_icon.png"
+            }, 
+            {
+                "type": "png", 
+                "name": "no_games", 
+                "file": "no_games.png"
             }
         ]
     }, 
