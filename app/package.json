@@ -7,7 +7,8 @@
   ],
   "private": true,
   "dependencies": {
-    "pebblejs": "^1.0.0"
+    "pebblejs": "^1.0.0",
+    "vector2": "^0.1.1"
   },
   "pebble": {
     "displayName": "Sports",
@@ -63,6 +64,11 @@
           "type": "png",
           "name": "no_games",
           "file": "no_games.png"
+        },
+        {
+          "type": "png",
+          "name": "about_icon",
+          "file": "about_icon.png"
         }
       ]
     }

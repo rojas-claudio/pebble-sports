@@ -1,6 +1,8 @@
 Pebble.addEventListener('ready', function() {
     require('pebblejs');
     var UI = require('pebblejs/ui');
+    var Vector2 = require('vector2');
+
     var leagues = new UI.Menu({
       status: false,
         backgroundColor: 'white',
@@ -20,16 +22,33 @@ Pebble.addEventListener('ready', function() {
             }, {
                 title: 'Basketball',
                 icon: 'basketball.png'
+            }, {
+                title: 'About',
+                icon: "about_icon.png"
             }]
         }]
     });
 
 
     leagues.on('select', function(e) {
-        getData(e.item.title);
+        if (e.item.title == 'About'){
+            about();
+        } else {
+            getData(e.item.title);
+        }
+        
     });
 
     leagues.show();
+
+    var noGames = new UI.Window({ fullscreen: true });
+    var noGamesIcon = new UI.Image({
+        position: new Vector2(0, 0),
+        size: new Vector2(144, 168),
+        image: 'no_games.png'
+    });
+
+    noGames.add(noGamesIcon);
 
     //this function receives 'sport' which is a string variable. It should be the title of a menu item like Hockey
     function getData(sport) {
@@ -45,7 +64,7 @@ Pebble.addEventListener('ready', function() {
         } else if (sport == "Soccer") {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/soccer/league/scoreboard';
         } else {
-            console.log('need to add support for more sports!');
+            console.log('Not a sport :(');
         }
         
         var req = new XMLHttpRequest();
@@ -56,9 +75,6 @@ Pebble.addEventListener('ready', function() {
                 if (req.status == 200) {
                     var data = JSON.parse(req.responseText);
                     var games = data.events; 
-                    for (var i = 0; i < games.length; i++) {
-                        console.log(games[i].name);
-                    }
                     showGamesMenu(sport, games);
                 }
             }
@@ -67,18 +83,26 @@ Pebble.addEventListener('ready', function() {
     }
 
     function showGamesMenu(sport, games) {
+
+        var currentDate = new Date().getTime();
         var gameMenuItems = [];
+        var filteredGames = [];
+
         for (var i = 0; i < games.length; i++) {
-            var gameMenuItem = {
-                title: games[i].shortName,
-                subtitle: games[i].competitions[0].competitors[1].score + " to " + games[i].competitions[0].competitors[0].score
+            var gameDateTime = new Date(games[i].competitions[0].date).getTime();
+            if (gameDateTime > currentDate) { 
+                var gameMenuItem = {
+                    title: games[i].shortName,
+                    subtitle: games[i].competitions[0].competitors[1].score + " to " + games[i].competitions[0].competitors[0].score
+                }
+                gameMenuItems.push(gameMenuItem);
+                filteredGames.push(games[i]);
             }
-            gameMenuItems.push(gameMenuItem);
+
         }
 
-
         var gameMenu = new UI.Menu({
-          status: false,
+            status: false,
             backgroundColor: 'white',
             textColor: 'black',
             highlightBackgroundColor: 'vivid-cerulean',
@@ -89,22 +113,45 @@ Pebble.addEventListener('ready', function() {
             }]
         });
 
-        gameMenu.show();
+        if (gameMenuItems.length == 0) {
+            noGames.show();
+        } else {
+            gameMenu.show();
+        }
+        
+
+        
 
         gameMenu.on('select', function (e) {
-            gameInformation(games[e.itemIndex]);
+            gameInformation(filteredGames[e.itemIndex]);
         });
     }
 
     function gameInformation(game) {
-        
+
         var infoCard = new UI.Card({
+            status: false,
             scrollable: true,
             title: game.name,
-            body: game.competitions[0].type.abbreviation + "\n" + game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score + "\n" + game.competitions[0].venue.fullName + "\n" + game.competitions[0].venue.address.state + ", " + game.competitions[0].venue.address.country,
+            body: "------" + "\n" + game.competitions[0].type.abbreviation + "\n" + game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score + "\n" + game.competitions[0].venue.fullName,
           });
 
         infoCard.show();
 
     }
+
+    function about() {
+        var aboutCard = new UI.Card({
+            status: false,
+            scrollable: true,
+            title: "Sports",
+            body: "Claudio Rojas 2020" + "\n" + "@itsthered1" + "\n" + "------" + "\n" + "Made in Los Angeles",
+          });
+
+        aboutCard.show();
+    }
+
+
 });
+
+

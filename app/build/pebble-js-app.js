@@ -81,6 +81,8 @@
 	Pebble.addEventListener('ready', function() {
 	    __webpack_require__(3);
 	    var UI = __webpack_require__(37);
+	    var Vector2 = __webpack_require__(49);
+	
 	    var leagues = new UI.Menu({
 	      status: false,
 	        backgroundColor: 'white',
@@ -100,16 +102,33 @@
 	            }, {
 	                title: 'Basketball',
 	                icon: 'basketball.png'
+	            }, {
+	                title: 'About',
+	                icon: "about_icon.png"
 	            }]
 	        }]
 	    });
 	
 	
 	    leagues.on('select', function(e) {
-	        getData(e.item.title);
+	        if (e.item.title == 'About'){
+	            about();
+	        } else {
+	            getData(e.item.title);
+	        }
+	        
 	    });
 	
 	    leagues.show();
+	
+	    var noGames = new UI.Window({ fullscreen: true });
+	    var noGamesIcon = new UI.Image({
+	        position: new Vector2(0, 0),
+	        size: new Vector2(144, 168),
+	        image: 'no_games.png'
+	    });
+	
+	    noGames.add(noGamesIcon);
 	
 	    //this function receives 'sport' which is a string variable. It should be the title of a menu item like Hockey
 	    function getData(sport) {
@@ -125,7 +144,7 @@
 	        } else if (sport == "Soccer") {
 	            APIURL = 'http://site.api.espn.com/apis/site/v2/sports/soccer/league/scoreboard';
 	        } else {
-	            console.log('need to add support for more sports!');
+	            console.log('Not a sport :(');
 	        }
 	        
 	        var req = new XMLHttpRequest();
@@ -136,9 +155,6 @@
 	                if (req.status == 200) {
 	                    var data = JSON.parse(req.responseText);
 	                    var games = data.events; 
-	                    for (var i = 0; i < games.length; i++) {
-	                        console.log(games[i].name);
-	                    }
 	                    showGamesMenu(sport, games);
 	                }
 	            }
@@ -147,18 +163,26 @@
 	    }
 	
 	    function showGamesMenu(sport, games) {
+	
+	        var currentDate = new Date().getTime();
 	        var gameMenuItems = [];
+	        var filteredGames = [];
+	
 	        for (var i = 0; i < games.length; i++) {
-	            var gameMenuItem = {
-	                title: games[i].shortName,
-	                subtitle: games[i].competitions[0].competitors[1].score + " to " + games[i].competitions[0].competitors[0].score
+	            var gameDateTime = new Date(games[i].competitions[0].date).getTime();
+	            if (gameDateTime > currentDate) { 
+	                var gameMenuItem = {
+	                    title: games[i].shortName,
+	                    subtitle: games[i].competitions[0].competitors[1].score + " to " + games[i].competitions[0].competitors[0].score
+	                }
+	                gameMenuItems.push(gameMenuItem);
+	                filteredGames.push(games[i]);
 	            }
-	            gameMenuItems.push(gameMenuItem);
+	
 	        }
 	
-	
 	        var gameMenu = new UI.Menu({
-	          status: false,
+	            status: false,
 	            backgroundColor: 'white',
 	            textColor: 'black',
 	            highlightBackgroundColor: 'vivid-cerulean',
@@ -169,28 +193,48 @@
 	            }]
 	        });
 	
-	        gameMenu.show();
+	        if (gameMenuItems.length == 0) {
+	            noGames.show();
+	        } else {
+	            gameMenu.show();
+	        }
+	        
+	
+	        
 	
 	        gameMenu.on('select', function (e) {
-	            gameInformation(games[e.itemIndex]);
+	            gameInformation(filteredGames[e.itemIndex]);
 	        });
 	    }
 	
 	    function gameInformation(game) {
 	
-	        console.log("OK, this listener is working!");
-	        console.log(JSON.stringify(game));
-	
 	        var infoCard = new UI.Card({
+	            status: false,
 	            scrollable: true,
 	            title: game.name,
-	            body: game.competitions[0].type.abbreviation + "\n" + game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score + "\n" + game.competitions[0].venue.fullName + "\n" + game.competitions[0].venue.address.state + ", " + game.competitions[0].venue.address.country,
+	            body: "------" + "\n" + game.competitions[0].type.abbreviation + "\n" + game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score + "\n" + game.competitions[0].venue.fullName,
 	          });
 	
 	        infoCard.show();
 	
 	    }
+	
+	    function about() {
+	        var aboutCard = new UI.Card({
+	            status: false,
+	            scrollable: true,
+	            title: "Sports",
+	            body: "Claudio Rojas 2020" + "\n" + "@itsthered1" + "\n" + "------" + "\n" + "Made in Los Angeles",
+	          });
+	
+	        aboutCard.show();
+	    }
+	
+	
 	});
+	
+	
 
 
 /***/ }),
@@ -3012,7 +3056,7 @@
 /* 17 */
 /***/ (function(module, exports) {
 
-	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[{"type":"png","name":"hockey_puck","file":"hockey_puck.png"},{"type":"png","name":"soccer_ball","file":"soccer_ball.png"},{"type":"png","name":"basketball","file":"basketball.png"},{"type":"png","name":"baseball","file":"baseball.png"},{"type":"png","name":"american_football","file":"american_football.png"},{"menuIcon":true,"type":"png","name":"menu_icon","file":"menu_icon.png"},{"type":"png","name":"no_games","file":"no_games.png"}]}}}
+	module.exports = {"name":"Sports","author":"itsthered1","version":"0.0.0","keywords":["pebble-app"],"private":true,"dependencies":{"pebblejs":"^1.0.0","vector2":"^0.1.1"},"pebble":{"displayName":"Sports","uuid":"9e57a249-9a5c-4ded-b374-005a472b8049","sdkVersion":"3","enableMultiJS":true,"targetPlatforms":["aplite","basalt","chalk","diorite"],"watchapp":{"watchface":false},"messageKeys":["dummy"],"resources":{"media":[{"type":"png","name":"hockey_puck","file":"hockey_puck.png"},{"type":"png","name":"soccer_ball","file":"soccer_ball.png"},{"type":"png","name":"basketball","file":"basketball.png"},{"type":"png","name":"baseball","file":"baseball.png"},{"type":"png","name":"american_football","file":"american_football.png"},{"menuIcon":true,"type":"png","name":"menu_icon","file":"menu_icon.png"},{"type":"png","name":"no_games","file":"no_games.png"},{"type":"png","name":"about_icon","file":"about_icon.png"}]}}}
 
 /***/ }),
 /* 18 */
@@ -6531,6 +6575,227 @@
 	  simply.impl.light('trigger');
 	};
 
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports) {
+
+	
+	/* !
+	 * vector2
+	 * JavaScript math library for 2d vector
+	 * Copyright (c) 2012 Enrico Marino
+	 * MIT License
+	 */
+	
+	/**
+	 * Library namespace.
+	 */
+	
+	var vector2 = exports;
+	
+	/**
+	 * Library version.
+	 */
+	
+	vector2.version = '0.1.0';
+	
+	/**
+	 * create
+	 * Create a 2d vector.
+	 * 
+	 * @return {Float32Array} a 2d vector
+	 * @api public
+	 */
+	
+	vector2.create = function () {
+	  return new Float32Array([0.0, 0.0]);
+	};
+	
+	/**
+	 * set
+	 * Set vector.
+	 * 
+	 * @param {Float32Array} self destination vector
+	 * @param {Float32Array} v source vector
+	 * @return {Float32Array} destination vector
+	 * @api public
+	 */
+	
+	vector2.set = function (self, v) {
+	  self[0] = v[0];
+	  self[1] = v[1];
+	
+	  return self;
+	};
+	
+	/**
+	 * zero
+	 * Set vector to zero.
+	 * 
+	 * @param {Float32Array} self destination vector
+	 * @return {Float32Array} destination vector
+	 * @api public
+	 */
+	
+	vector2.zero = function (self) {
+	  self[0] = 0.0;
+	  self[1] = 0.0;
+	
+	  return self;
+	};
+	
+	/**
+	 * sum
+	 * Set vector to the sum of `a` and `b`.
+	 * 
+	 * @param {Float32Array} self destination vector
+	 * @param {Float32Array} a vector
+	 * @param {Float32Array} b vector
+	 * @return {Float32Array} destination vector
+	 * @api public
+	 */
+	
+	vector2.sum = function (self, a, b) {
+	  self[0] = a[0] + b[0];
+	  self[1] = a[1] + b[1];
+	
+	  return self;
+	};
+	
+	/**
+	 * diff
+	 * Set vector to the difference of `a` and `b`.
+	 * 
+	 * @param {Float32Array} self destination vector
+	 * @param {Float32Array} a vector
+	 * @param {Float32Array} b vector
+	 * @return {Float32Array} destination vector
+	 * @api public
+	 */
+	
+	vector2.diff = function (self, a, b) {
+	  self[0] = a[0] - b[0];
+	  self[1] = a[1] - b[1];
+	
+	  return self;
+	};
+	
+	/**
+	 * add
+	 * Add vector.
+	 * 
+	 * @param {Float32Array} self destination vector
+	 * @param {Float32Array} v vector
+	 * @return {Float32Array} destination vector
+	 * @api public
+	 */
+	
+	vector2.add = function (self, v) {
+	  self[0] += v[0];
+	  self[1] += v[1];
+	
+	  return self;
+	};
+	
+	/**
+	 * sub
+	 * Sub vector.
+	 * 
+	 * @param {Float32Array} self destination vector
+	 * @param {Float32Array} v vector
+	 * @return {Float32Array} destination vector
+	 * @api public
+	 */
+	
+	vector2.sub = function (self, v) {
+	  self[0] -= v[0];
+	  self[1] -= v[1];
+	
+	  return self;
+	};
+	
+	/**
+	 * diff
+	 * Set vector to the opposite of `v`.
+	 * 
+	 * @param {Float32Array} self destination vector
+	 * @param {Float32Array} v vector
+	 * @return {Float32Array} destination vector
+	 * @api public
+	 */
+	
+	vector2.opposite = function (self, v) {
+	  self[0] = -v[0];
+	  self[1] = -v[1];
+	
+	  return self;
+	};
+	
+	/**
+	 * neg
+	 * Negate vector.
+	 * 
+	 * @param {Float32Array} self destination vector
+	 * @return {Float32Array} destination vector
+	 * @api public
+	 */
+	
+	vector2.neg = function (self) {
+	  self[0] = -self[0];
+	  self[1] = -self[1];
+	
+	  return self;
+	};
+	
+	/**
+	 * scale
+	 * Scale vector.
+	 * 
+	 * @param {Float32Array} self destination vector
+	 * @param {Number} k scaling value
+	 * @return {Float32Array} destination vector
+	 * @api public
+	 */
+	
+	vector2.scale = function (self, k) {
+	  self[0] *= k;
+	  self[1] *= k;
+	
+	  return self;
+	};
+	
+	/**
+	 * length
+	 * Get vector length.
+	 * 
+	 * @param {Float32Array} self vector
+	 * @return {Number} vector length
+	 * @api public
+	 */
+	
+	vector2.length = function (self) {
+	  var x = self[0];
+	  var y = self[1];
+	
+	  return sqrt(x*x + y*y);
+	};
+	
+	/**
+	 * length_squared
+	 * Get vector length squared.
+	 * 
+	 * @param {Float32Array} self vector
+	 * @return {Number} vector length
+	 * @api public
+	 */
+	
+	vector2.length_squared = function (self) {
+	  var x = self[0];
+	  var y = self[1];
+	
+	  return (x*x + y*y);
+	};
 
 /***/ })
 /******/ ]);
