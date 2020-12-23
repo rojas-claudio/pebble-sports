@@ -1,7 +1,7 @@
 Pebble.addEventListener('ready', function() {
     require('pebblejs');
     var UI = require('pebblejs/ui');
-    var Vector2 = require('vector2');
+    var Vector2 = require('pebblejs/lib/vector2');
 
     var leagues = new UI.Menu({
       status: false,
@@ -30,6 +30,24 @@ Pebble.addEventListener('ready', function() {
     });
 
 
+    var noGames = new UI.Window({
+        backgroundColor: 'white'
+    });
+
+    var noGamesText = new UI.Text({
+        position: new Vector2 (0, 50),
+        size: new Vector2 (144, 168),
+        font: 'gothic-28-bold',
+        color: '#000000',
+        text: "NO GAMES TO DISPLAY!",
+        textOverflow: 'wrap',
+        textAlign: 'center'
+    });
+    noGames.add(noGamesText);
+
+
+
+
     leagues.on('select', function(e) {
         if (e.item.title == 'About'){
             about();
@@ -41,16 +59,10 @@ Pebble.addEventListener('ready', function() {
 
     leagues.show();
 
-    var noGames = new UI.Window({ fullscreen: true });
-    var noGamesIcon = new UI.Image({
-        position: new Vector2(0, 0),
-        size: new Vector2(144, 168),
-        image: 'no_games.png'
-    });
 
-    noGames.add(noGamesIcon);
 
-    //this function receives 'sport' which is a string variable. It should be the title of a menu item like Hockey
+
+
     function getData(sport) {
         var APIURL = '';
         if (sport == "Football") {
@@ -84,20 +96,24 @@ Pebble.addEventListener('ready', function() {
 
     function showGamesMenu(sport, games) {
 
-        var currentDate = new Date().getTime();
+        var currentEpoch = new Date().getTime();
         var gameMenuItems = [];
         var filteredGames = [];
 
+        console.log("Current Time " + currentEpoch);
+
         for (var i = 0; i < games.length; i++) {
-            var gameDateTime = new Date(games[i].competitions[0].date).getTime();
-            if (gameDateTime > currentDate) { 
+            var gameEpoch = new Date(games[i].competitions[0].date).getTime();
+            if (gameEpoch > currentEpoch) { 
                 var gameMenuItem = {
                     title: games[i].shortName,
                     subtitle: games[i].competitions[0].competitors[1].score + " to " + games[i].competitions[0].competitors[0].score
                 }
                 gameMenuItems.push(gameMenuItem);
                 filteredGames.push(games[i]);
+                
             }
+            console.log("Game Time " + gameEpoch);
 
         }
 
@@ -115,13 +131,11 @@ Pebble.addEventListener('ready', function() {
 
         if (gameMenuItems.length == 0) {
             noGames.show();
+            console.log('no games to show');-
         } else {
             gameMenu.show();
         }
         
-
-        
-
         gameMenu.on('select', function (e) {
             gameInformation(filteredGames[e.itemIndex]);
         });
@@ -133,7 +147,7 @@ Pebble.addEventListener('ready', function() {
             status: false,
             scrollable: true,
             title: game.name,
-            body: "------" + "\n" + game.competitions[0].type.abbreviation + "\n" + game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score + "\n" + game.competitions[0].venue.fullName,
+            body: "------" + "\n" + game.competitions[0].type.abbreviation + "\n" + game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score + "\n" + game.date,
           });
 
         infoCard.show();

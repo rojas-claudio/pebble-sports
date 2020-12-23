@@ -62,13 +62,13 @@
         },
         {
           "type": "png",
-          "name": "no_games",
-          "file": "no_games.png"
+          "name": "about_icon",
+          "file": "about_icon.png"
         },
         {
           "type": "png",
-          "name": "about_icon",
-          "file": "about_icon.png"
+          "name": "itr1",
+          "file": "itr1.png"
         }
       ]
     }

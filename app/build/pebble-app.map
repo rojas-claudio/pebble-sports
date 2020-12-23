@@ -61,8 +61,6 @@ Discarded input sections
                 0x0000000000000000        0x4 aplite/src/resource_ids.auto.c.33.o
  .data.RESOURCE_ID_menu_icon
                 0x0000000000000000        0x4 aplite/src/resource_ids.auto.c.33.o
- .data.RESOURCE_ID_no_games
-                0x0000000000000000        0x4 aplite/src/resource_ids.auto.c.33.o
  .data.RESOURCE_ID_american_football
                 0x0000000000000000        0x4 aplite/src/resource_ids.auto.c.33.o
  .data.RESOURCE_ID_baseball
@@ -74,6 +72,8 @@ Discarded input sections
  .data.RESOURCE_ID_SIMPLY_IMAGE_LOGO_SPLASH
                 0x0000000000000000        0x4 aplite/src/resource_ids.auto.c.33.o
  .data.RESOURCE_ID_soccer_ball
+                0x0000000000000000        0x4 aplite/src/resource_ids.auto.c.33.o
+ .data.RESOURCE_ID_itr1
                 0x0000000000000000        0x4 aplite/src/resource_ids.auto.c.33.o
  .data.RESOURCE_ID_SIMPLY_IMAGE_MENU_ICON
                 0x0000000000000000        0x4 aplite/src/resource_ids.auto.c.33.o
@@ -2274,40 +2274,40 @@ OUTPUT(/mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/
  .debug_line    0x0000000000003b92       0xd8 /home/claudio/pebble-dev/pebble-sdk-4.5-linux64/arm-cs-tools/bin/../lib/gcc/arm-none-eabi/4.7.2/thumb2/libgcc.a(_udivdi3.o)
  .debug_line    0x0000000000003c6a       0x90 /home/claudio/pebble-dev/pebble-sdk-4.5-linux64/arm-cs-tools/bin/../lib/gcc/arm-none-eabi/4.7.2/thumb2/libgcc.a(_udivsi3.o)
 
-.debug_str      0x0000000000000000     0x5120
+.debug_str      0x0000000000000000     0x511c
  .debug_str     0x0000000000000000      0x10b src/c/Sports.c.33.o
                                         0x144 (size before relaxing)
  .debug_str     0x000000000000010b      0x242 aplite/appinfo.auto.c.33.o
                                         0x33d (size before relaxing)
- .debug_str     0x000000000000034d      0x168 aplite/src/resource_ids.auto.c.33.o
-                                        0x250 (size before relaxing)
- .debug_str     0x00000000000004b5       0x2a src/message_keys.auto.c.33.o
+ .debug_str     0x000000000000034d      0x164 aplite/src/resource_ids.auto.c.33.o
+                                        0x24c (size before relaxing)
+ .debug_str     0x00000000000004b1       0x2a src/message_keys.auto.c.33.o
                                         0x112 (size before relaxing)
- .debug_str     0x00000000000004df      0x5bc /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply.c.21.o)
+ .debug_str     0x00000000000004db      0x5bc /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply.c.21.o)
                                         0x774 (size before relaxing)
- .debug_str     0x0000000000000a9b      0x6eb /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_accel.c.21.o)
+ .debug_str     0x0000000000000a97      0x6eb /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_accel.c.21.o)
                                         0xa19 (size before relaxing)
- .debug_str     0x0000000000001186     0x1311 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_menu.c.21.o)
+ .debug_str     0x0000000000001182     0x1311 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_menu.c.21.o)
                                        0x1ddf (size before relaxing)
- .debug_str     0x0000000000002497      0x828 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_msg.c.21.o)
+ .debug_str     0x0000000000002493      0x828 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_msg.c.21.o)
                                        0x1454 (size before relaxing)
- .debug_str     0x0000000000002cbf      0x2ff /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_res.c.21.o)
+ .debug_str     0x0000000000002cbb      0x2ff /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_res.c.21.o)
                                         0x6d8 (size before relaxing)
- .debug_str     0x0000000000002fbe       0xf0 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_splash.c.21.o)
+ .debug_str     0x0000000000002fba       0xf0 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_splash.c.21.o)
                                         0x446 (size before relaxing)
- .debug_str     0x00000000000030ae      0xeb5 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_stage.c.21.o)
+ .debug_str     0x00000000000030aa      0xeb5 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_stage.c.21.o)
                                        0x1f12 (size before relaxing)
- .debug_str     0x0000000000003f63      0x46c /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_ui.c.21.o)
+ .debug_str     0x0000000000003f5f      0x46c /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_ui.c.21.o)
                                        0x1655 (size before relaxing)
- .debug_str     0x00000000000043cf      0x25e /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_wakeup.c.21.o)
+ .debug_str     0x00000000000043cb      0x25e /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_wakeup.c.21.o)
                                         0x98e (size before relaxing)
- .debug_str     0x000000000000462d      0x7b5 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_window.c.21.o)
+ .debug_str     0x0000000000004629      0x7b5 /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_window.c.21.o)
                                        0x156d (size before relaxing)
- .debug_str     0x0000000000004de2      0x19e /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_window_stack.c.21.o)
+ .debug_str     0x0000000000004dde      0x19e /mnt/d/Development/Pebble Development/Github Repositories/sports-app/app/node_modules/pebblejs/dist/binaries/aplite/libpebblejs.a(simply_window_stack.c.21.o)
                                         0xb82 (size before relaxing)
- .debug_str     0x0000000000004f80       0xda /home/claudio/pebble-dev/pebble-sdk-4.5-linux64/arm-cs-tools/bin/../lib/gcc/arm-none-eabi/4.7.2/thumb2/libgcc.a(bpabi.o)
+ .debug_str     0x0000000000004f7c       0xda /home/claudio/pebble-dev/pebble-sdk-4.5-linux64/arm-cs-tools/bin/../lib/gcc/arm-none-eabi/4.7.2/thumb2/libgcc.a(bpabi.o)
                                         0x10b (size before relaxing)
- .debug_str     0x000000000000505a       0xc6 /home/claudio/pebble-dev/pebble-sdk-4.5-linux64/arm-cs-tools/bin/../lib/gcc/arm-none-eabi/4.7.2/thumb2/libgcc.a(_divdi3.o)
+ .debug_str     0x0000000000005056       0xc6 /home/claudio/pebble-dev/pebble-sdk-4.5-linux64/arm-cs-tools/bin/../lib/gcc/arm-none-eabi/4.7.2/thumb2/libgcc.a(_divdi3.o)
                                         0x1d8 (size before relaxing)
  .debug_str     0x0000000000000000      0x1d9 /home/claudio/pebble-dev/pebble-sdk-4.5-linux64/arm-cs-tools/bin/../lib/gcc/arm-none-eabi/4.7.2/thumb2/libgcc.a(_udivdi3.o)
 

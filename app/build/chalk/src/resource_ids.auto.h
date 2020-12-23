@@ -13,8 +13,8 @@
 #define  RESOURCE_ID_baseball  4
 #define  RESOURCE_ID_american_football  5
 #define  RESOURCE_ID_menu_icon  6
-#define  RESOURCE_ID_no_games  7
-#define  RESOURCE_ID_about_icon  8
+#define  RESOURCE_ID_about_icon  7
+#define  RESOURCE_ID_itr1  8
 #define  RESOURCE_ID_SIMPLY_IMAGE_MENU_ICON  9
 #define  RESOURCE_ID_SIMPLY_IMAGE_LOGO_SPLASH  10
 #define  RESOURCE_ID_SIMPLY_IMAGE_TILE_SPLASH  11
