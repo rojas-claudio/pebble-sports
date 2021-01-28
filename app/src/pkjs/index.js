@@ -1,7 +1,9 @@
+require('pebblejs');
+var UI = require('pebblejs/ui');
+var Vector2 = require('pebblejs/lib/vector2');
+
 Pebble.addEventListener('ready', function() {
-    require('pebblejs');
-    var UI = require('pebblejs/ui');
-    var Vector2 = require('pebblejs/lib/vector2');
+
 
     var leagues = new UI.Menu({
       status: false,
@@ -54,7 +56,7 @@ Pebble.addEventListener('ready', function() {
         } else {
             getData(e.item.title);
         }
-        
+
     });
 
     leagues.show();
@@ -78,7 +80,7 @@ Pebble.addEventListener('ready', function() {
         } else {
             console.log('Not a sport :(');
         }
-        
+
         var req = new XMLHttpRequest();
         req.open('GET', APIURL, true);
         req.onload = function(e) {
@@ -86,34 +88,71 @@ Pebble.addEventListener('ready', function() {
                 // 200 - HTTP OK
                 if (req.status == 200) {
                     var data = JSON.parse(req.responseText);
-                    var games = data.events; 
+                    var games = data.events;
                     showGamesMenu(sport, games);
                 }
             }
         }
         req.send();
+
     }
 
     function showGamesMenu(sport, games) {
 
-        var currentEpoch = new Date().getTime();
+        var dateToday = new Date();
+        var currentEpoch = dateToday.getTime();
         var gameMenuItems = [];
         var filteredGames = [];
 
         console.log("Current Time " + currentEpoch);
 
         for (var i = 0; i < games.length; i++) {
-            var gameEpoch = new Date(games[i].competitions[0].date).getTime();
-            if (gameEpoch > currentEpoch) { 
+            var game = games[i];
+            //If we only show games when their start time is in the future, we'll never show in-progress games
+            //The API tells us if the game is over or not, so let's use that
+            if (game.status.type.completed == false) {
+
+                var gameSubtitle = "oops"
+
+                //Set the subtitle based on the gamestate
+                //See https://www.espn.com/apis/devcenter/docs/scores.html (CTRL + F for 'status')
+                if (game.status.type.id == 1) {
+                  //The game is still scheduled, but in the future, display start time
+
+                  //Parse the string date into a date object
+                  var gameDate = new Date(game.date);
+                  var gameMidnight = gameDate.setHours(0,0,0,0);
+                  var todayMidnight = dateToday.setHours(0,0,0,0);
+
+                  if (gameMidnight == todayMidnight) {
+                    //The game starts today, show the just the time
+                    gameSubtitle = getPrettyTime(gameDate)
+
+                  } else {
+
+                    //The game doesn't start today, show the date
+                    gameSubtitle = getPrettyDate(gameDate)
+
+                  }
+
+                } else if (game.status.type.id == 2) {
+                  //The game is in progress, display the score
+                  gameSubtitle = game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score;
+                } else {
+                  //The game is not completed, but it isn't in progress or scheduled, display the state (postponed etc)
+                  gameSubtitle = game.status.type.description
+                }
+
+
+
                 var gameMenuItem = {
                     title: games[i].shortName,
-                    subtitle: games[i].competitions[0].competitors[1].score + " to " + games[i].competitions[0].competitors[0].score
+                    subtitle: gameSubtitle
                 }
                 gameMenuItems.push(gameMenuItem);
                 filteredGames.push(games[i]);
-                
+
             }
-            console.log("Game Time " + gameEpoch);
 
         }
 
@@ -135,7 +174,7 @@ Pebble.addEventListener('ready', function() {
         } else {
             gameMenu.show();
         }
-        
+
         gameMenu.on('select', function (e) {
             gameInformation(filteredGames[e.itemIndex]);
         });
@@ -165,7 +204,22 @@ Pebble.addEventListener('ready', function() {
         aboutCard.show();
     }
 
+    function getPrettyDate(d) {
+      var months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"]
+      var out = ""
+      out += d.getDate() + " "
+      out += months[d.getMonth()] + " "
+      return out
+    }
+
+    function getPrettyTime(t) {
+      var out = ""
+      var hours = t.getHours()
+      if (hours.length < 2) { hours = "0" + hours}
+      var minutes = t.getMinutes()
+      if (minutes.length < 2) { minutes = "0" + minutes}
+
+      return hours + ":" + minutes
+    }
 
 });
-
-
