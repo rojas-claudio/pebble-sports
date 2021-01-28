@@ -131,7 +131,7 @@ Pebble.addEventListener('ready', function() {
 
         if (gameMenuItems.length == 0) {
             noGames.show();
-            console.log('no games to show');-
+            console.log('no games to show');
         } else {
             gameMenu.show();
         }
