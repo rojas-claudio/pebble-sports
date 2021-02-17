@@ -1,8 +1,10 @@
-require('pebblejs');
-var UI = require('pebblejs/ui');
-var Vector2 = require('pebblejs/lib/vector2');
-
 Pebble.addEventListener('ready', function() {
+
+    require('pebblejs');
+    var UI = require('pebblejs/ui');
+    var Vector2 = require('pebblejs/lib/vector2');
+
+
 
 
     var leagues = new UI.Menu({
@@ -181,15 +183,49 @@ Pebble.addEventListener('ready', function() {
     }
 
     function gameInformation(game) {
+        var period = "PERIOD " + game.status.period;
 
-        var infoCard = new UI.Card({
-            status: false,
-            scrollable: true,
-            title: game.name,
-            body: "------" + "\n" + game.competitions[0].type.abbreviation + "\n" + game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score + "\n" + game.date,
+        var gameInfo = new UI.Window({
+            backgroundColor: 'white'
+        });
+        var title = new UI.Text({
+            position: new Vector2 (0, 10),
+            size: new Vector2 (144, 168),
+            font: 'gothic-14-bold',
+            color: '#000000',
+            text: game.name,
+            textOverflow: 'wrap',
+            textAlign: 'center'
+        })
+        var score = new UI.Text({
+            position: new Vector2 (0, 60),
+            size: new Vector2 (144, 168),
+            font: 'leco-38-bold-numbers',
+            color: '#000000',
+            text: game.competitions[0].competitors[1].score + "  " + game.competitions[0].competitors[0].score,
+            textOverflow: 'wrap',
+            textAlign: 'center'
+        });
+        var line = new UI.Line({
+            position: new Vector2(71, 55),
+            position2: new Vector2(71, 110),
+            strokeColor: 'black',
+            strokeWidth: '10',
           });
-
-        infoCard.show();
+        var periodNum = new UI.Text({
+            position: new Vector2 (0, 125),
+            size: new Vector2 (144, 168),
+            font: 'gothic-14-bold',
+            color: '#000000',
+            text: period,
+            textOverflow: 'wrap',
+            textAlign: 'center'
+        })
+        gameInfo.add(title);
+        gameInfo.add(line);
+        gameInfo.add(score);
+        gameInfo.add(periodNum);
+        gameInfo.show();
 
     }
 
@@ -215,9 +251,13 @@ Pebble.addEventListener('ready', function() {
     function getPrettyTime(t) {
       var out = ""
       var hours = t.getHours()
-      if (hours.length < 2) { hours = "0" + hours}
+      if (hours.length < 2) { 
+          hours = "0" + hours
+        }
       var minutes = t.getMinutes()
-      if (minutes.length < 2) { minutes = "0" + minutes}
+      if (minutes.length < 2) { 
+          minutes = "0" + minutes
+        }
 
       return hours + ":" + minutes
     }
