@@ -1,10 +1,20 @@
+/*
+### #######  #####  ####### #     # ####### ######  ####### ######    #   
+ #     #    #     #    #    #     # #       #     # #       #     #  ##   
+ #     #    #          #    #     # #       #     # #       #     # # #   
+ #     #     #####     #    ####### #####   ######  #####   #     #   #   
+ #     #          #    #    #     # #       #   #   #       #     #   #   
+ #     #    #     #    #    #     # #       #    #  #       #     #   #   
+###    #     #####     #    #     # ####### #     # ####### ######  ##### 
+*/
+
+
 Pebble.addEventListener('ready', function() {
 
     require('pebblejs');
     var UI = require('pebblejs/ui');
     var Vector2 = require('pebblejs/lib/vector2');
-
-
+    var timeline = require('pebble-timeline-js');
 
 
     var leagues = new UI.Menu({
@@ -49,22 +59,17 @@ Pebble.addEventListener('ready', function() {
     });
     noGames.add(noGamesText);
 
-
-
-
     leagues.on('select', function(e) {
         if (e.item.title == 'About'){
             about();
         } else {
             getData(e.item.title);
+            fetchDate = new Date();
         }
 
     });
 
     leagues.show();
-
-
-
 
 
     function getData(sport) {
@@ -91,7 +96,7 @@ Pebble.addEventListener('ready', function() {
                 if (req.status == 200) {
                     var data = JSON.parse(req.responseText);
                     var games = data.events;
-                    showGamesMenu(sport, games);
+                    fetchGames(sport, games);
                 }
             }
         }
@@ -99,64 +104,104 @@ Pebble.addEventListener('ready', function() {
 
     }
 
-    function showGamesMenu(sport, games) {
+    function fetchGames(sport, games) {
 
         var dateToday = new Date();
-        var currentEpoch = dateToday.getTime();
         var gameMenuItems = [];
         var filteredGames = [];
-
-        console.log("Current Time " + currentEpoch);
-
+    
         for (var i = 0; i < games.length; i++) {
             var game = games[i];
             //If we only show games when their start time is in the future, we'll never show in-progress games
             //The API tells us if the game is over or not, so let's use that
-            if (game.status.type.completed == false) {
-
-                var gameSubtitle = "oops"
-
-                //Set the subtitle based on the gamestate
-                //See https://www.espn.com/apis/devcenter/docs/scores.html (CTRL + F for 'status')
-                if (game.status.type.id == 1) {
-                  //The game is still scheduled, but in the future, display start time
-
-                  //Parse the string date into a date object
-                  var gameDate = new Date(game.date);
-                  var gameMidnight = gameDate.setHours(0,0,0,0);
-                  var todayMidnight = dateToday.setHours(0,0,0,0);
-
-                  if (gameMidnight == todayMidnight) {
+    
+    
+            var gameSubtitle = "oops";
+    
+            //Set the subtitle based on the gamestate
+            //See https://www.espn.com/apis/devcenter/docs/scores.html (CTRL + F for 'status')
+            if (game.status.type.id == 1) {
+                //The game is still scheduled, but in the future, display start time
+    
+                //Parse the string date into a date object
+                var gameDate = new Date(game.date);
+                //Copy gameDate so we preserve the original time in case we need it
+                var gameMidnight = new Date(gameDate);
+                gameMidnight.setHours(0, 0, 0, 0);
+                dateToday.setHours(0, 0, 0, 0);
+    
+                if (gameMidnight.getTime() == dateToday.getTime()) {
                     //The game starts today, show the just the time
                     gameSubtitle = getPrettyTime(gameDate)
-
-                  } else {
-
+    
+                } else {
+    
                     //The game doesn't start today, show the date
                     gameSubtitle = getPrettyDate(gameDate)
-
-                  }
-
-                } else if (game.status.type.id == 2) {
-                  //The game is in progress, display the score
-                  gameSubtitle = game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score;
-                } else {
-                  //The game is not completed, but it isn't in progress or scheduled, display the state (postponed etc)
-                  gameSubtitle = game.status.type.description
+    
                 }
+    
+            } else if (game.status.type.id == 2) {
+                //The game is in progress, display the score
+                gameSubtitle = game.competitions[0].competitors[1].score + " to " + game.competitions[0].competitors[0].score;
+            } else {
+                //The game is not completed, but it isn't in progress or scheduled, display the state (postponed etc)
+                gameSubtitle = game.status.type.description
+            }
+    
+            var gameMenuItem = {
+                title: game.shortName,
+                subtitle: gameSubtitle
+            };
+            gameMenuItems.push(gameMenuItem);
+            filteredGames.push(game);
 
+            
 
+            //Timeline Pins:
 
-                var gameMenuItem = {
-                    title: games[i].shortName,
-                    subtitle: gameSubtitle
-                }
-                gameMenuItems.push(gameMenuItem);
-                filteredGames.push(games[i]);
+            var gameISO = new Date(game.date).toISOString();
+            var period;
+            if (game.status.type.id >= 3 || game.status.type.id <= 1 ) {
+                period = game.status.type.description;
+            } else if (game.status.type.id == 2) {
+                period = "Period " + game.status.period
+            }
 
+            if (sport == 'Hockey') {
+                var gamePin = {
+                    "id": game.id,
+                    "time": gameISO,
+                    "layout": {
+                      "type": "sportsPin",
+                      "title": game.name,
+                      "subtitle": period,
+                      "body": game.competitions[0].venue.fullname,
+                      "tinyIcon": "system://images/HOCKEY_GAME",
+                      "largeIcon": "system://images/HOCKEY_GAME",
+                      "lastUpdated": fetchDate,
+                      "rankAway": game.competitions[0].competitors[1].score,
+                      "rankHome": game.competitions[0].competitors[0].score,
+                      "nameAway": game.competitions[0].competitors[1].team.abbreviation,
+                      "nameHome": game.competitions[0].competitors[0].team.abbreviation,
+                      "recordAway": game.competitions[0].competitors[1].records.summary,
+                      "recordHome": game.competitions[0].competitors[0].records.summary,
+                      "scoreAway": game.competitions[0].competitors[1].score,
+                      "scoreHome": game.competitions[0].competitors[0].score,
+                      "sportsGameState": game.status.type.description,
+                    }
+                };
+    
+                console.log('Inserting pin in the future: ' + JSON.stringify(gamePin));
+    
+                // Push the pin
+                timeline.insertUserPin(gamePin, function(responseText) {
+                  console.log('Result: ' + responseText);
+                });
             }
 
         }
+    
 
         var gameMenu = new UI.Menu({
             status: false,
@@ -169,21 +214,28 @@ Pebble.addEventListener('ready', function() {
                 items: gameMenuItems
             }]
         });
-
+    
         if (gameMenuItems.length == 0) {
             noGames.show();
             console.log('no games to show');
         } else {
             gameMenu.show();
         }
-
-        gameMenu.on('select', function (e) {
+    
+        gameMenu.on('select', function(e) {
             gameInformation(filteredGames[e.itemIndex]);
         });
     }
 
     function gameInformation(game) {
+
         var period = "PERIOD " + game.status.period;
+        var timeStamp = game.status.displayClock;
+
+
+        if (game.status.type.name == "STATUS_END_PERIOD") {
+            period = game.status.type.detail;
+        }
 
         var gameInfo = new UI.Window({
             backgroundColor: 'white'
@@ -196,35 +248,90 @@ Pebble.addEventListener('ready', function() {
             text: game.name,
             textOverflow: 'wrap',
             textAlign: 'center'
-        })
-        var score = new UI.Text({
-            position: new Vector2 (0, 60),
+        });
+        var away = new UI.Text({
+            position: new Vector2 (-36, 50),
             size: new Vector2 (144, 168),
             font: 'leco-38-bold-numbers',
             color: '#000000',
-            text: game.competitions[0].competitors[1].score + "  " + game.competitions[0].competitors[0].score,
+            text: game.competitions[0].competitors[1].score,
             textOverflow: 'wrap',
             textAlign: 'center'
         });
+        var awayAbbreviation = new UI.Text({
+            position: new Vector2 (-36, 90),
+            size: new Vector2 (144, 168),
+            font: 'gothic-18-bold',
+            color: '#000000',
+            text: game.competitions[0].competitors[1].team.abbreviation,
+            textOverflow: 'wrap',
+            textAlign: 'center'
+        });
+        var home = new UI.Text({
+            position: new Vector2 (36, 50),
+            size: new Vector2 (144, 168),
+            font: 'leco-38-bold-numbers',
+            color: '#000000',
+            text: game.competitions[0].competitors[0].score,
+            textOverflow: 'wrap',
+            textAlign: 'center'
+        });
+        var homeAbbreviation = new UI.Text({
+            position: new Vector2 (36, 90),
+            size: new Vector2 (144, 168),
+            font: 'gothic-18-bold',
+            color: '#000000',
+            text: game.competitions[0].competitors[0].team.abbreviation,
+            textOverflow: 'wrap',
+            textAlign: 'center'
+        });
+        //Divider for both scores: add later, not needed now
         var line = new UI.Line({
-            position: new Vector2(71, 55),
-            position2: new Vector2(71, 110),
+            position: new Vector2(72, 55),
+            position2: new Vector2(72, 110),
             strokeColor: 'black',
             strokeWidth: '10',
-          });
+        });
         var periodNum = new UI.Text({
-            position: new Vector2 (0, 125),
+            position: new Vector2 (0, 120),
             size: new Vector2 (144, 168),
             font: 'gothic-14-bold',
             color: '#000000',
             text: period,
             textOverflow: 'wrap',
             textAlign: 'center'
-        })
+        });
+        var time = new UI.Text({
+            position: new Vector2 (0, 135),
+            size: new Vector2 (144, 168),
+            font: 'gothic-14-bold',
+            color: '#000000',
+            text: timeStamp,
+            textOverflow: 'wrap',
+            textAlign: 'center'
+        });
+        var status = new UI.Text({
+            position: new Vector2 (0, 127),
+            size: new Vector2 (144, 168),
+            font: 'gothic-14-bold',
+            color: '#000000',
+            text: game.status.type.description,
+            textOverflow: 'wrap',
+            textAlign: 'center'
+        });
         gameInfo.add(title);
-        gameInfo.add(line);
-        gameInfo.add(score);
-        gameInfo.add(periodNum);
+        gameInfo.add(away);
+        gameInfo.add(awayAbbreviation);
+        gameInfo.add(home);
+        gameInfo.add(homeAbbreviation);
+        
+        if (game.status.type.id == 1 || game.status.type.id >= 3) {
+            gameInfo.add(status);
+        } else {
+            gameInfo.add(periodNum);
+            gameInfo.add(time);
+        }
+
         gameInfo.show();
 
     }
@@ -249,17 +356,21 @@ Pebble.addEventListener('ready', function() {
     }
 
     function getPrettyTime(t) {
-      var out = ""
-      var hours = t.getHours()
-      if (hours.length < 2) { 
-          hours = "0" + hours
+        var out = ""
+        var hours = t.getHours()
+        if (hours.length < 2) { 
+            hours = "0" + hours
+          }
+        var minutes = t.getMinutes()
+        if (minutes.length < 2) { 
+            minutes = "0" + minutes
         }
-      var minutes = t.getMinutes()
-      if (minutes.length < 2) { 
-          minutes = "0" + minutes
+        if (minutes == 0) { 
+          minutes = "00"
         }
-
-      return hours + ":" + minutes
-    }
+          console.log("H: " + hours)
+          console.log("M2: " + minutes)
+        return hours + ":" + minutes
+      }
 
 });
