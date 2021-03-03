@@ -7,10 +7,9 @@
   ],
   "private": true,
   "dependencies": {
+    "pebble-clay": "^1.0.4",
     "pebble-timeline-js": "^2.0.1",
-    "pebblejs": "^1.0.0",
-    "timeline-js": "0.0.2",
-    "vector2": "^0.1.1"
+    "pebblejs": "^1.0.0"
   },
   "pebble": {
     "displayName": "Sports",
@@ -20,14 +19,13 @@
     "targetPlatforms": [
       "aplite",
       "basalt",
-      "chalk",
       "diorite"
     ],
     "watchapp": {
       "watchface": false
     },
     "messageKeys": [
-      "dummy"
+      "timelineTeams"
     ],
     "resources": {
       "media": [

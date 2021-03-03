@@ -1,0 +1,51 @@
+[
+    { 
+      "type": "heading", 
+      "defaultValue": "Sports Configuration" 
+    }, 
+    { 
+      "type": "section", 
+      "items": [
+          {
+            "type": "heading",
+            "defaultValue": "Timeline"
+          },
+          {
+            "type": "text",
+            "defaultValue": "Which teams would you like to push to Timeline?"
+          }
+      ]
+    },
+    {
+      "type": "checkboxgroup",
+      "id": "nflTimeline",
+      "messageKey": "nflTimeline",
+      "label": "NFL Teams:",
+      "defaultValue": ["blah", "blah", "blah"],
+      "options": ["blah", "blah", "blah"]
+    },
+    {
+      "type": "checkboxgroup",
+      "id": "mlbTimeline",
+      "messageKey": "mlbTimeline",
+      "label": "MLB Teams:",
+      "defaultValue": ["blah", "blah", "blah"],
+      "options": ["blah", "blah", "blah"]
+    },
+    {
+      "type": "checkboxgroup",
+      "id": "nhlTimeline",
+      "messageKey": "nhlTimeline",
+      "label": "NHL Teams:",
+      "defaultValue": ["blah", "blah", "blah"],
+      "options": ["blah", "blah", "blah"]
+    },
+    {
+      "type": "checkboxgroup",
+      "id": "nbaTimeline",
+      "messageKey": "nbaTimeline",
+      "label": "NBA Teams:",
+      "defaultValue": ["blah", "blah", "blah"],
+      "options": ["blah", "blah", "blah"]
+    }
+]

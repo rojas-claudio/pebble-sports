@@ -15,7 +15,14 @@ Pebble.addEventListener('ready', function() {
     var UI = require('pebblejs/ui');
     var Vector2 = require('pebblejs/lib/vector2');
     var timeline = require('pebble-timeline-js');
-
+    var ajax = require('pebblejs/dist/js/lib/ajax.js');
+    
+    var Clay = require('pebble-clay');
+    var clayConfig = require('./config.json');
+    var customClay = require('./custom-clay.js');   
+    var clay = new Clay(clayConfig, customClay);
+    
+    var fetchDate;
 
     var leagues = new UI.Menu({
       status: false,
@@ -53,7 +60,7 @@ Pebble.addEventListener('ready', function() {
         size: new Vector2 (144, 168),
         font: 'gothic-28-bold',
         color: '#000000',
-        text: "NO GAMES TO DISPLAY!",
+        text: "NO GAMES TODAY",
         textOverflow: 'wrap',
         textAlign: 'center'
     });
@@ -71,7 +78,6 @@ Pebble.addEventListener('ready', function() {
 
     leagues.show();
 
-
     function getData(sport) {
         var APIURL = '';
         if (sport == "Football") {
@@ -84,27 +90,20 @@ Pebble.addEventListener('ready', function() {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
         } else if (sport == "Soccer") {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/soccer/league/scoreboard';
-        } else {
-            console.log('Not a sport :(');
-        }
+        } 
 
-        var req = new XMLHttpRequest();
-        req.open('GET', APIURL, true);
-        req.onload = function(e) {
-            if (req.readyState == 4) {
-                // 200 - HTTP OK
-                if (req.status == 200) {
-                    var data = JSON.parse(req.responseText);
-                    var games = data.events;
-                    fetchGames(sport, games);
-                }
+
+        ajax({ url: APIURL, type: 'json' },
+            function(data) {
+                var games = data.events;
+                listGames(sport, games);
             }
-        }
-        req.send();
-
+        );
+        
     }
+    
 
-    function fetchGames(sport, games) {
+    function listGames(sport, games) {
 
         var dateToday = new Date();
         var gameMenuItems = [];
@@ -155,50 +154,7 @@ Pebble.addEventListener('ready', function() {
             };
             gameMenuItems.push(gameMenuItem);
             filteredGames.push(game);
-
-            
-
-            //Timeline Pins:
-
-            var gameISO = new Date(game.date).toISOString();
-            var period;
-            if (game.status.type.id >= 3 || game.status.type.id <= 1 ) {
-                period = game.status.type.description;
-            } else if (game.status.type.id == 2) {
-                period = "Period " + game.status.period
-            }
-
-            if (sport == 'Hockey') {
-                var gamePin = {
-                    "id": game.id,
-                    "time": gameISO,
-                    "layout": {
-                      "type": "sportsPin",
-                      "title": game.name,
-                      "subtitle": period,
-                      "body": game.competitions[0].venue.fullname,
-                      "tinyIcon": "system://images/HOCKEY_GAME",
-                      "largeIcon": "system://images/HOCKEY_GAME",
-                      "lastUpdated": fetchDate,
-                      "rankAway": game.competitions[0].competitors[1].score,
-                      "rankHome": game.competitions[0].competitors[0].score,
-                      "nameAway": game.competitions[0].competitors[1].team.abbreviation,
-                      "nameHome": game.competitions[0].competitors[0].team.abbreviation,
-                      "recordAway": game.competitions[0].competitors[1].records.summary,
-                      "recordHome": game.competitions[0].competitors[0].records.summary,
-                      "scoreAway": game.competitions[0].competitors[1].score,
-                      "scoreHome": game.competitions[0].competitors[0].score,
-                      "sportsGameState": game.status.type.description,
-                    }
-                };
-    
-                console.log('Inserting pin in the future: ' + JSON.stringify(gamePin));
-    
-                // Push the pin
-                timeline.insertUserPin(gamePin, function(responseText) {
-                  console.log('Result: ' + responseText);
-                });
-            }
+            pushPin(sport, game);
 
         }
     
@@ -371,6 +327,51 @@ Pebble.addEventListener('ready', function() {
           console.log("H: " + hours)
           console.log("M2: " + minutes)
         return hours + ":" + minutes
-      }
+    }
+
+
+    function pushPin(sport, game) {
+        var gameISO = new Date(game.date).toISOString();
+        var period;
+        if (game.status.type.id >= 3 || game.status.type.id <= 1 ) {
+            period = game.status.type.description;
+        } else if (game.status.type.id == 2) {
+            period = "Period " + game.status.period
+        }
+
+        if (sport == 'Hockey') { // if competitors ----> displayName matches that of Clay config
+            var gamePin = {
+                "id": game.id,
+                "time": gameISO,
+                "layout": {
+                  "type": "sportsPin",
+                  "title": game.name,
+                  "subtitle": period,
+                  "body": game.competitions[0].venue.fullname,
+                  "tinyIcon": "system://images/HOCKEY_GAME",
+                  "largeIcon": "system://images/HOCKEY_GAME",
+                  "lastUpdated": fetchDate,
+                  "rankAway": game.competitions[0].competitors[1].score,
+                  "rankHome": game.competitions[0].competitors[0].score,
+                  "nameAway": game.competitions[0].competitors[1].team.abbreviation,
+                  "nameHome": game.competitions[0].competitors[0].team.abbreviation,
+                  "recordAway": game.competitions[0].competitors[1].records.summary,
+                  "recordHome": game.competitions[0].competitors[0].records.summary,
+                  "scoreAway": game.competitions[0].competitors[1].score,
+                  "scoreHome": game.competitions[0].competitors[0].score,
+                  "sportsGameState": game.status.type.description,
+                }
+            };
+
+            console.log('Inserting pin in the future: ' + JSON.stringify(gamePin));
+
+            // Push the pin
+            timeline.insertUserPin(gamePin, function(responseText) {
+              console.log('Result: ' + responseText);
+            });
+        }
+    }
+
+
 
 });
