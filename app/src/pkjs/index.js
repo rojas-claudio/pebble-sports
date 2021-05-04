@@ -1,14 +1,3 @@
-/*
-### #######  #####  ####### #     # ####### ######  ####### ######    #   
- #     #    #     #    #    #     # #       #     # #       #     #  ##   
- #     #    #          #    #     # #       #     # #       #     # # #   
- #     #     #####     #    ####### #####   ######  #####   #     #   #   
- #     #          #    #    #     # #       #   #   #       #     #   #   
- #     #    #     #    #    #     # #       #    #  #       #     #   #   
-###    #     #####     #    #     # ####### #     # ####### ######  ##### 
-*/
-
-
 Pebble.addEventListener('ready', function() {
 
     require('pebblejs');
@@ -17,6 +6,8 @@ Pebble.addEventListener('ready', function() {
     var timeline = require('pebble-timeline-js');
     var ajax = require('pebblejs/dist/js/lib/ajax.js');
     
+
+    //WORK IN PROGRESS, clay currently does not work
     var Clay = require('pebble-clay');
     var clayConfig = require('./config.json');
     var customClay = require('./custom-clay.js');   
@@ -88,9 +79,9 @@ Pebble.addEventListener('ready', function() {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard';
         } else if (sport == "Basketball") {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
-        } else if (sport == "Soccer") {
-            APIURL = 'http://site.api.espn.com/apis/site/v2/sports/soccer/league/scoreboard';
-        } 
+        } else {
+            
+        }
 
 
         ajax({ url: APIURL, type: 'json' },
@@ -154,7 +145,6 @@ Pebble.addEventListener('ready', function() {
             };
             gameMenuItems.push(gameMenuItem);
             filteredGames.push(game);
-            pushPin(sport, game);
 
         }
     
@@ -179,13 +169,14 @@ Pebble.addEventListener('ready', function() {
         }
     
         gameMenu.on('select', function(e) {
-            gameInformation(filteredGames[e.itemIndex]);
+            gameInformation(filteredGames[e.itemIndex], sport);
         });
     }
 
-    function gameInformation(game) {
+    function gameInformation(game, sport) {
 
-        var period = "PERIOD " + game.status.period;
+        var period = "PERIOD " + game.status.type;
+        
         var timeStamp = game.status.displayClock;
 
 
@@ -194,7 +185,8 @@ Pebble.addEventListener('ready', function() {
         }
 
         var gameInfo = new UI.Window({
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            scrollable: true
         });
         var title = new UI.Text({
             position: new Vector2 (0, 10),
@@ -241,6 +233,7 @@ Pebble.addEventListener('ready', function() {
             textOverflow: 'wrap',
             textAlign: 'center'
         });
+
         //Divider for both scores: add later, not needed now
         var line = new UI.Line({
             position: new Vector2(72, 55),
@@ -329,7 +322,7 @@ Pebble.addEventListener('ready', function() {
         return hours + ":" + minutes
     }
 
-
+    //Experimental due to RWS' sync periods
     function pushPin(sport, game) {
         var gameISO = new Date(game.date).toISOString();
         var period;
