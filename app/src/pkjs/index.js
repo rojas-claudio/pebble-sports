@@ -8,10 +8,10 @@ Pebble.addEventListener('ready', function() {
     
 
     //WORK IN PROGRESS, clay currently does not work
-    var Clay = require('pebble-clay');
-    var clayConfig = require('./config.json');
-    var customClay = require('./custom-clay.js');   
-    var clay = new Clay(clayConfig, customClay);
+    //var Clay = require('pebble-clay');
+    //var clayConfig = require('./config.json');
+    //var customClay = require('./custom-clay.js');   
+    //var clay = new Clay(clayConfig, customClay);
     
     var fetchDate;
 
@@ -24,15 +24,19 @@ Pebble.addEventListener('ready', function() {
         sections: [{
             items: [{
                 title: 'Football',
+                subtitle: getData('Football', true),
                 icon: 'american_football.png'
             }, {
                 title: 'Baseball',
+                subtitle: getData('Baseball', true),
                 icon: 'baseball.png'
             }, {
                 title: 'Hockey',
+                subtitle: getData('Hockey', true),
                 icon: 'hockey_puck.png'
             }, {
                 title: 'Basketball',
+                subtitle: getData('Basketball', true),
                 icon: 'basketball.png'
             }, {
                 title: 'About',
@@ -69,7 +73,7 @@ Pebble.addEventListener('ready', function() {
 
     leagues.show();
 
-    function getData(sport) {
+    function getData(sport, gameCount) { 
         var APIURL = '';
         if (sport == "Football") {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
@@ -80,17 +84,29 @@ Pebble.addEventListener('ready', function() {
         } else if (sport == "Basketball") {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
         } else {
-            
+          console.log("x("); 
         }
 
-
-        ajax({ url: APIURL, type: 'json' },
-            function(data) {
-                var games = data.events;
+        var req = new XMLHttpRequest();
+        req.open('GET', APIURL, false);
+        req.send();
+        if (req.status == 200) {
+            var data = JSON.parse(req.responseText);
+            var games = data.events;
+            if (gameCount == true) {
+                console.log(games.length);
+                var text = '';
+                if (games.length > 1) {
+                    text = " Games";
+                } else {
+                    text = " Game"
+                }
+                return games.length + text;
+            } else {
                 listGames(sport, games);
-            }
-        );
-        
+            }            
+        }
+
     }
     
 
@@ -157,7 +173,7 @@ Pebble.addEventListener('ready', function() {
             highlightTextColor: 'black',
             sections: [{
                 title: sport,
-                items: gameMenuItems
+                items: gameMenuItems,
             }]
         });
     
@@ -175,22 +191,27 @@ Pebble.addEventListener('ready', function() {
 
     function gameInformation(game, sport) {
 
-        var period = "PERIOD " + game.status.type;
-        
+        var gameStatus;
         var timeStamp = game.status.displayClock;
 
-
-        if (game.status.type.name == "STATUS_END_PERIOD") {
-            period = game.status.type.detail;
+        if (game.status.type.id == 2 || game.status.type.id == 22) {
+            gameStatus = game.status.type.detail;
+        } else if (game.status.type.id == 3) {
+            gameStatus = game.status.type.description;
         }
+
+        if (sport == 'Basketball') {
+            gameStatus = "Quarter " + game.status.period 
+        }
+
 
         var gameInfo = new UI.Window({
             backgroundColor: 'white',
             scrollable: true
         });
         var title = new UI.Text({
-            position: new Vector2 (0, 10),
-            size: new Vector2 (144, 168),
+            position: new Vector2 (5, 10),
+            size: new Vector2 (134, 168),
             font: 'gothic-14-bold',
             color: '#000000',
             text: game.name,
@@ -233,25 +254,17 @@ Pebble.addEventListener('ready', function() {
             textOverflow: 'wrap',
             textAlign: 'center'
         });
-
-        //Divider for both scores: add later, not needed now
-        var line = new UI.Line({
-            position: new Vector2(72, 55),
-            position2: new Vector2(72, 110),
-            strokeColor: 'black',
-            strokeWidth: '10',
-        });
-        var periodNum = new UI.Text({
-            position: new Vector2 (0, 120),
+        var status = new UI.Text({
+            position: new Vector2 (0, 125),
             size: new Vector2 (144, 168),
             font: 'gothic-14-bold',
             color: '#000000',
-            text: period,
+            text: gameStatus,
             textOverflow: 'wrap',
             textAlign: 'center'
         });
         var time = new UI.Text({
-            position: new Vector2 (0, 135),
+            position: new Vector2 (0, 142.5),
             size: new Vector2 (144, 168),
             font: 'gothic-14-bold',
             color: '#000000',
@@ -259,28 +272,30 @@ Pebble.addEventListener('ready', function() {
             textOverflow: 'wrap',
             textAlign: 'center'
         });
-        var status = new UI.Text({
-            position: new Vector2 (0, 127),
-            size: new Vector2 (144, 168),
-            font: 'gothic-14-bold',
-            color: '#000000',
-            text: game.status.type.description,
-            textOverflow: 'wrap',
-            textAlign: 'center'
+        var line = new UI.Line({
+            position: new Vector2(20, 168),
+            position2: new Vector2(124, 168),
+            strokeColor: 'black',
+            strokeWidth: '10',
         });
-        gameInfo.add(title);
-        gameInfo.add(away);
-        gameInfo.add(awayAbbreviation);
-        gameInfo.add(home);
-        gameInfo.add(homeAbbreviation);
         
         if (game.status.type.id == 1 || game.status.type.id >= 3) {
             gameInfo.add(status);
         } else {
-            gameInfo.add(periodNum);
             gameInfo.add(time);
         }
 
+        if (game.status.displayClock == "0:00") { 
+            gameInfo.remove(time);
+        }
+
+        gameInfo.add(title);
+        gameInfo.add(away);
+        gameInfo.add(status);
+        gameInfo.add(awayAbbreviation);
+        gameInfo.add(home);
+        gameInfo.add(homeAbbreviation);
+        gameInfo.add(line);
         gameInfo.show();
 
     }
@@ -322,7 +337,7 @@ Pebble.addEventListener('ready', function() {
         return hours + ":" + minutes
     }
 
-    //Experimental due to RWS' sync periods
+    //Experimental due to RWS sync periods
     function pushPin(sport, game) {
         var gameISO = new Date(game.date).toISOString();
         var period;
@@ -364,7 +379,5 @@ Pebble.addEventListener('ready', function() {
             });
         }
     }
-
-
 
 });
