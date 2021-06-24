@@ -1,9 +1,9 @@
 {
   "name": "Sports",
-  "author": "itsthered1",
+  "author": "Claudio Rojas",
   "version": "0.0.0",
   "keywords": [
-    "pebble-app"
+    "Sports"
   ],
   "private": true,
   "dependencies": {
@@ -24,9 +24,6 @@
     "watchapp": {
       "watchface": false
     },
-    "messageKeys": [
-      "timelineTeams"
-    ],
     "resources": {
       "media": [
         {

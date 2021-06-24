@@ -3,15 +3,8 @@ Pebble.addEventListener('ready', function() {
     require('pebblejs');
     var UI = require('pebblejs/ui');
     var Vector2 = require('pebblejs/lib/vector2');
+    var Platform = require('pebblejs/platform')
     var timeline = require('pebble-timeline-js');
-    var ajax = require('pebblejs/dist/js/lib/ajax.js');
-    
-
-    //WORK IN PROGRESS, clay currently does not work
-    //var Clay = require('pebble-clay');
-    //var clayConfig = require('./config.json');
-    //var customClay = require('./custom-clay.js');   
-    //var clay = new Clay(clayConfig, customClay);
     
     var fetchDate;
 
@@ -24,19 +17,19 @@ Pebble.addEventListener('ready', function() {
         sections: [{
             items: [{
                 title: 'Football',
-                subtitle: getData('Football', true),
+                subtitle: getData('Football', 'count'),
                 icon: 'american_football.png'
             }, {
                 title: 'Baseball',
-                subtitle: getData('Baseball', true),
+                subtitle: getData('Baseball', 'count'),
                 icon: 'baseball.png'
             }, {
                 title: 'Hockey',
-                subtitle: getData('Hockey', true),
+                subtitle: getData('Hockey', 'count'),
                 icon: 'hockey_puck.png'
             }, {
                 title: 'Basketball',
-                subtitle: getData('Basketball', true),
+                subtitle: getData('Basketball', 'count'),
                 icon: 'basketball.png'
             }, {
                 title: 'About',
@@ -55,7 +48,7 @@ Pebble.addEventListener('ready', function() {
         size: new Vector2 (144, 168),
         font: 'gothic-28-bold',
         color: '#000000',
-        text: "NO GAMES TODAY",
+        text: "NO GAMES TODAY!",
         textOverflow: 'wrap',
         textAlign: 'center'
     });
@@ -67,14 +60,14 @@ Pebble.addEventListener('ready', function() {
         } else {
             getData(e.item.title);
             fetchDate = new Date();
-        }
-
+        } 
     });
 
     leagues.show();
 
-    function getData(sport, gameCount) { 
+    function getData(sport, dataType) { 
         var APIURL = '';
+        
         if (sport == "Football") {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
         } else if (sport == "Hockey") {
@@ -93,10 +86,10 @@ Pebble.addEventListener('ready', function() {
         if (req.status == 200) {
             var data = JSON.parse(req.responseText);
             var games = data.events;
-            if (gameCount == true) {
+            if (dataType == 'count') {
                 console.log(games.length);
                 var text = '';
-                if (games.length > 1) {
+                if (games.length > 1 || games.length == 0) {
                     text = " Games";
                 } else {
                     text = " Game"
@@ -104,7 +97,7 @@ Pebble.addEventListener('ready', function() {
                 return games.length + text;
             } else {
                 listGames(sport, games);
-            }            
+            }        
         }
 
     }
@@ -121,14 +114,13 @@ Pebble.addEventListener('ready', function() {
             //If we only show games when their start time is in the future, we'll never show in-progress games
             //The API tells us if the game is over or not, so let's use that
     
-    
             var gameSubtitle = "oops";
     
             //Set the subtitle based on the gamestate
             //See https://www.espn.com/apis/devcenter/docs/scores.html (CTRL + F for 'status')
             if (game.status.type.id == 1) {
                 //The game is still scheduled, but in the future, display start time
-    
+
                 //Parse the string date into a date object
                 var gameDate = new Date(game.date);
                 //Copy gameDate so we preserve the original time in case we need it
@@ -138,12 +130,12 @@ Pebble.addEventListener('ready', function() {
     
                 if (gameMidnight.getTime() == dateToday.getTime()) {
                     //The game starts today, show the just the time
-                    gameSubtitle = getPrettyTime(gameDate)
+                    gameSubtitle = getPrettyTime(gameDate);
     
                 } else {
     
                     //The game doesn't start today, show the date
-                    gameSubtitle = getPrettyDate(gameDate)
+                    gameSubtitle = getPrettyDate(gameDate);
     
                 }
     
@@ -159,6 +151,7 @@ Pebble.addEventListener('ready', function() {
                 title: game.shortName,
                 subtitle: gameSubtitle
             };
+            
             gameMenuItems.push(gameMenuItem);
             filteredGames.push(game);
 
@@ -179,7 +172,6 @@ Pebble.addEventListener('ready', function() {
     
         if (gameMenuItems.length == 0) {
             noGames.show();
-            console.log('no games to show');
         } else {
             gameMenu.show();
         }
@@ -192,17 +184,30 @@ Pebble.addEventListener('ready', function() {
     function gameInformation(game, sport) {
 
         var gameStatus;
+        var homeScore;
+        var awayScore;
         var timeStamp = game.status.displayClock;
 
-        if (game.status.type.id == 2 || game.status.type.id == 22) {
+        
+        if (game.status.type.id == 2) {
             gameStatus = game.status.type.detail;
-        } else if (game.status.type.id == 3) {
+            var statusPosition = new Vector2 (0, 128);
+        } else if (game.status.type.id == 1 || game.status.type.id >= 3) {
             gameStatus = game.status.type.description;
+            statusPosition = new Vector2 (0, 137);
         }
 
-        if (sport == 'Basketball') {
-            gameStatus = "Quarter " + game.status.period 
+        if (sport == 'Baseball') {
+            statusPosition = new Vector2 (0, 137); 
         }
+
+        if (sport == 'Basketball' && game.status.type.id == 2) {
+            gameStatus = "Quarter " + game.status.period; 
+        } else if (sport == 'Hockey' && game.status.type.id == 2) {
+            gameStatus = "Period " + game.status.period;
+        }
+
+        //TODO: Shrink font size if scores exceed 2 chars
 
 
         var gameInfo = new UI.Window({
@@ -236,6 +241,11 @@ Pebble.addEventListener('ready', function() {
             textOverflow: 'wrap',
             textAlign: 'center'
         });
+        var awayColor = new UI.Rect ({
+            position: new Vector2 (22, 115),
+            size: new Vector2 (28, 10),
+            backgroundColor: '#' + game.competitions[0].competitors[1].team.color
+        });
         var home = new UI.Text({
             position: new Vector2 (36, 50),
             size: new Vector2 (144, 168),
@@ -254,8 +264,22 @@ Pebble.addEventListener('ready', function() {
             textOverflow: 'wrap',
             textAlign: 'center'
         });
+        var homeColor = new UI.Rect ({
+            position: new Vector2 (94, 115),
+            size: new Vector2 (28, 10),
+            backgroundColor: '#' + game.competitions[0].competitors[0].team.color
+        });
+        var at = new UI.Text ({
+            position: new Vector2 (0, 67.5),
+            size: new Vector2 (144, 168),
+            font: 'gothic-24-bold',
+            color: '#000000',
+            text: "@",
+            textOverflow: 'wrap',
+            textAlign: 'center'
+        })
         var status = new UI.Text({
-            position: new Vector2 (0, 125),
+            position: statusPosition,
             size: new Vector2 (144, 168),
             font: 'gothic-14-bold',
             color: '#000000',
@@ -264,7 +288,7 @@ Pebble.addEventListener('ready', function() {
             textAlign: 'center'
         });
         var time = new UI.Text({
-            position: new Vector2 (0, 142.5),
+            position: new Vector2 (0, 145.5),
             size: new Vector2 (144, 168),
             font: 'gothic-14-bold',
             color: '#000000',
@@ -272,13 +296,13 @@ Pebble.addEventListener('ready', function() {
             textOverflow: 'wrap',
             textAlign: 'center'
         });
-        var line = new UI.Line({
-            position: new Vector2(20, 168),
-            position2: new Vector2(124, 168),
+        var line = new UI.Line({    
+            position: new Vector2(20, 170),
+            position2: new Vector2(124, 170),
             strokeColor: 'black',
             strokeWidth: '10',
         });
-        
+
         if (game.status.type.id == 1 || game.status.type.id >= 3) {
             gameInfo.add(status);
         } else {
@@ -289,6 +313,12 @@ Pebble.addEventListener('ready', function() {
             gameInfo.remove(time);
         }
 
+        if (Platform.version() == 'basalt' || Platform.version() == "emery") {
+            gameInfo.add(awayColor);
+            gameInfo.add(homeColor);
+        }
+
+        gameInfo.add(at);
         gameInfo.add(title);
         gameInfo.add(away);
         gameInfo.add(status);
