@@ -3,8 +3,8 @@ Pebble.addEventListener('ready', function() {
     require('pebblejs');
     var UI = require('pebblejs/ui');
     var Vector2 = require('pebblejs/lib/vector2');
-    var Platform = require('pebblejs/platform')
-    var timeline = require('pebble-timeline-js');
+    var Platform = require('pebblejs/platform');
+    var Feature = require('pebblejs/platform/feature');
     
     var fetchDate;
 
@@ -77,7 +77,7 @@ Pebble.addEventListener('ready', function() {
         } else if (sport == "Basketball") {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
         } else {
-          console.log("x("); 
+          console.log("Not a sport!"); 
         }
 
         var req = new XMLHttpRequest();
@@ -184,27 +184,46 @@ Pebble.addEventListener('ready', function() {
     function gameInformation(game, sport) {
 
         var gameStatus;
-        var homeScore;
-        var awayScore;
         var timeStamp = game.status.displayClock;
 
-        
-        if (game.status.type.id == 2) {
-            gameStatus = game.status.type.detail;
-            var statusPosition = new Vector2 (0, 128);
-        } else if (game.status.type.id == 1 || game.status.type.id >= 3) {
-            gameStatus = game.status.type.description;
-            statusPosition = new Vector2 (0, 137);
-        }
+        console.log(Feature.color());
 
-        if (sport == 'Baseball') {
-            statusPosition = new Vector2 (0, 137); 
+        if (Feature.color()) {
+
+            if (game.status.type.id == 2) {
+                gameStatus = game.status.type.detail;
+                var statusPosition = new Vector2 (0, 128);
+            } else if (game.status.type.id == 1 || game.status.type.id >= 3) {
+                gameStatus = game.status.type.description;
+                statusPosition = new Vector2 (0, 137);
+            } 
+
+            if (sport == 'Baseball') {
+                statusPosition = new Vector2 (0, 137); 
+            }
+
+        } else {
+
+            if (game.status.type.id == 2) {
+                gameStatus = game.status.type.detail;
+                var statusPosition = new Vector2 (0, 119);
+            } else if (game.status.type.id == 1 || game.status.type.id >= 3) {
+                gameStatus = game.status.type.description;
+                statusPosition = new Vector2 (0, 128);
+            } 
+
+            if (sport == 'Baseball') {
+                statusPosition = new Vector2 (0, 128); 
+            }
+
         }
 
         if (sport == 'Basketball' && game.status.type.id == 2) {
             gameStatus = "Quarter " + game.status.period; 
         } else if (sport == 'Hockey' && game.status.type.id == 2) {
             gameStatus = "Period " + game.status.period;
+        } else if (sport == 'Football' && game.status.type.id == 2) {
+            gameStatus = "Quarter " + game.status.period; 
         }
 
         //TODO: Shrink font size if scores exceed 2 chars
@@ -212,7 +231,7 @@ Pebble.addEventListener('ready', function() {
 
         var gameInfo = new UI.Window({
             backgroundColor: 'white',
-            scrollable: true
+            scrollable: false
         });
         var title = new UI.Text({
             position: new Vector2 (5, 10),
@@ -296,12 +315,6 @@ Pebble.addEventListener('ready', function() {
             textOverflow: 'wrap',
             textAlign: 'center'
         });
-        var line = new UI.Line({    
-            position: new Vector2(20, 170),
-            position2: new Vector2(124, 170),
-            strokeColor: 'black',
-            strokeWidth: '10',
-        });
 
         if (game.status.type.id == 1 || game.status.type.id >= 3) {
             gameInfo.add(status);
@@ -313,7 +326,7 @@ Pebble.addEventListener('ready', function() {
             gameInfo.remove(time);
         }
 
-        if (Platform.version() == 'basalt' || Platform.version() == "emery") {
+        if (Feature.color()) {
             gameInfo.add(awayColor);
             gameInfo.add(homeColor);
         }
@@ -325,7 +338,6 @@ Pebble.addEventListener('ready', function() {
         gameInfo.add(awayAbbreviation);
         gameInfo.add(home);
         gameInfo.add(homeAbbreviation);
-        gameInfo.add(line);
         gameInfo.show();
 
     }
@@ -366,48 +378,4 @@ Pebble.addEventListener('ready', function() {
           console.log("M2: " + minutes)
         return hours + ":" + minutes
     }
-
-    //Experimental due to RWS sync periods
-    function pushPin(sport, game) {
-        var gameISO = new Date(game.date).toISOString();
-        var period;
-        if (game.status.type.id >= 3 || game.status.type.id <= 1 ) {
-            period = game.status.type.description;
-        } else if (game.status.type.id == 2) {
-            period = "Period " + game.status.period
-        }
-
-        if (sport == 'Hockey') { // if competitors ----> displayName matches that of Clay config
-            var gamePin = {
-                "id": game.id,
-                "time": gameISO,
-                "layout": {
-                  "type": "sportsPin",
-                  "title": game.name,
-                  "subtitle": period,
-                  "body": game.competitions[0].venue.fullname,
-                  "tinyIcon": "system://images/HOCKEY_GAME",
-                  "largeIcon": "system://images/HOCKEY_GAME",
-                  "lastUpdated": fetchDate,
-                  "rankAway": game.competitions[0].competitors[1].score,
-                  "rankHome": game.competitions[0].competitors[0].score,
-                  "nameAway": game.competitions[0].competitors[1].team.abbreviation,
-                  "nameHome": game.competitions[0].competitors[0].team.abbreviation,
-                  "recordAway": game.competitions[0].competitors[1].records.summary,
-                  "recordHome": game.competitions[0].competitors[0].records.summary,
-                  "scoreAway": game.competitions[0].competitors[1].score,
-                  "scoreHome": game.competitions[0].competitors[0].score,
-                  "sportsGameState": game.status.type.description,
-                }
-            };
-
-            console.log('Inserting pin in the future: ' + JSON.stringify(gamePin));
-
-            // Push the pin
-            timeline.insertUserPin(gamePin, function(responseText) {
-              console.log('Result: ' + responseText);
-            });
-        }
-    }
-
 });
