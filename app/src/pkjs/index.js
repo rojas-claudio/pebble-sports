@@ -3,17 +3,25 @@ Pebble.addEventListener('ready', function() {
     require('pebblejs');
     var UI = require('pebblejs/ui');
     var Vector2 = require('pebblejs/lib/vector2');
-    var Platform = require('pebblejs/platform');
     var Feature = require('pebblejs/platform/feature');
     
     var fetchDate;
+
+
+    var highlightColor = 'vivid-cerulean';
+    var highlightText = 'black';
+
+    if (!Feature.color()) {
+        highlightColor = 'black';
+        highlightText = 'white';
+    }
 
     var leagues = new UI.Menu({
       status: false,
         backgroundColor: 'white',
         textColor: 'black',
-        highlightBackgroundColor: 'vivid-cerulean',
-        highlightTextColor: 'black',
+        highlightBackgroundColor: highlightColor,
+        highlightTextColor: highlightText,
         sections: [{
             items: [{
                 title: 'Football',
@@ -31,9 +39,6 @@ Pebble.addEventListener('ready', function() {
                 title: 'Basketball',
                 subtitle: getData('Basketball', 'count'),
                 icon: 'basketball.png'
-            }, {
-                title: 'About',
-                icon: "about_icon.png"
             }]
         }]
     });
@@ -55,17 +60,13 @@ Pebble.addEventListener('ready', function() {
     noGames.add(noGamesText);
 
     leagues.on('select', function(e) {
-        if (e.item.title == 'About'){
-            about();
-        } else {
-            getData(e.item.title);
-            fetchDate = new Date();
-        } 
+        getData(e.item.title);
+        fetchDate = new Date();
     });
 
     leagues.show();
 
-    function getData(sport, dataType) { 
+    function getData(sport, dataType, refreshIndex) { 
         var APIURL = '';
         
         if (sport == "Football") {
@@ -77,7 +78,7 @@ Pebble.addEventListener('ready', function() {
         } else if (sport == "Basketball") {
             APIURL = 'http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
         } else {
-          console.log("Not a sport!"); 
+          console.log("Invalid Selection"); 
         }
 
         var req = new XMLHttpRequest();
@@ -87,7 +88,6 @@ Pebble.addEventListener('ready', function() {
             var data = JSON.parse(req.responseText);
             var games = data.events;
             if (dataType == 'count') {
-                console.log(games.length);
                 var text = '';
                 if (games.length > 1 || games.length == 0) {
                     text = " Games";
@@ -95,6 +95,8 @@ Pebble.addEventListener('ready', function() {
                     text = " Game"
                 }
                 return games.length + text;
+            } else if (dataType == 'update') {
+                gameInformation(games[refreshIndex], sport, refreshIndex);
             } else {
                 listGames(sport, games);
             }        
@@ -162,8 +164,8 @@ Pebble.addEventListener('ready', function() {
             status: false,
             backgroundColor: 'white',
             textColor: 'black',
-            highlightBackgroundColor: 'vivid-cerulean',
-            highlightTextColor: 'black',
+            highlightBackgroundColor: highlightColor,
+            highlightTextColor: highlightText,
             sections: [{
                 title: sport,
                 items: gameMenuItems,
@@ -177,16 +179,18 @@ Pebble.addEventListener('ready', function() {
         }
     
         gameMenu.on('select', function(e) {
-            gameInformation(filteredGames[e.itemIndex], sport);
+            gameInformation(filteredGames[e.itemIndex], sport, e.itemIndex);
         });
     }
 
-    function gameInformation(game, sport) {
-
+    function gameInformation(game, sport, index) {
         var gameStatus;
         var timeStamp = game.status.displayClock;
+        var awayScore = game.competitions[0].competitors[1].score;
+        var homeScore = game.competitions[0].competitors[0].score;
+        var atPosition = 67.5;
+        var scoreFont = 'leco-38-bold-numbers';
 
-        console.log(Feature.color());
 
         if (Feature.color()) {
 
@@ -226,7 +230,10 @@ Pebble.addEventListener('ready', function() {
             gameStatus = "Quarter " + game.status.period; 
         }
 
-        //TODO: Shrink font size if scores exceed 2 chars
+        if (awayScore.length >= 3 || homeScore.length >= 3) {
+            scoreFont = 'leco-32-bold-numbers';
+            atPosition = 90;
+        }
 
 
         var gameInfo = new UI.Window({
@@ -245,9 +252,9 @@ Pebble.addEventListener('ready', function() {
         var away = new UI.Text({
             position: new Vector2 (-36, 50),
             size: new Vector2 (144, 168),
-            font: 'leco-38-bold-numbers',
+            font: scoreFont,
             color: '#000000',
-            text: game.competitions[0].competitors[1].score,
+            text: awayScore,
             textOverflow: 'wrap',
             textAlign: 'center'
         });
@@ -268,9 +275,9 @@ Pebble.addEventListener('ready', function() {
         var home = new UI.Text({
             position: new Vector2 (36, 50),
             size: new Vector2 (144, 168),
-            font: 'leco-38-bold-numbers',
+            font: scoreFont,
             color: '#000000',
-            text: game.competitions[0].competitors[0].score,
+            text: homeScore,
             textOverflow: 'wrap',
             textAlign: 'center'
         });
@@ -289,7 +296,7 @@ Pebble.addEventListener('ready', function() {
             backgroundColor: '#' + game.competitions[0].competitors[0].team.color
         });
         var at = new UI.Text ({
-            position: new Vector2 (0, 67.5),
+            position: new Vector2 (0, atPosition),
             size: new Vector2 (144, 168),
             font: 'gothic-24-bold',
             color: '#000000',
@@ -314,6 +321,12 @@ Pebble.addEventListener('ready', function() {
             text: timeStamp,
             textOverflow: 'wrap',
             textAlign: 'center'
+        });
+        var line = new UI.Line({
+            position: new Vector2(72, 60),
+            position2: new Vector2(72, 85),
+            strokeColor: 'black',
+            strokeWidth: '10',
         });
 
         if (game.status.type.id == 1 || game.status.type.id >= 3) {
@@ -340,17 +353,12 @@ Pebble.addEventListener('ready', function() {
         gameInfo.add(homeAbbreviation);
         gameInfo.show();
 
-    }
+        gameInfo.on('click', 'select', function(){
+            console.log("Refreshing!");
+            gameInfo.hide();
+            getData(sport, 'update', index);
+        });
 
-    function about() {
-        var aboutCard = new UI.Card({
-            status: false,
-            scrollable: true,
-            title: "Sports",
-            body: "Claudio Rojas 2020" + "\n" + "@itsthered1" + "\n" + "------" + "\n" + "Made in Los Angeles",
-          });
-
-        aboutCard.show();
     }
 
     function getPrettyDate(d) {
@@ -364,18 +372,28 @@ Pebble.addEventListener('ready', function() {
     function getPrettyTime(t) {
         var out = ""
         var hours = t.getHours()
-        if (hours.length < 2) { 
+        if (hours < 10) { 
             hours = "0" + hours
           }
         var minutes = t.getMinutes()
-        if (minutes.length < 2) { 
+        if (minutes < 10) { 
             minutes = "0" + minutes
         }
         if (minutes == 0) { 
           minutes = "00"
         }
-          console.log("H: " + hours)
-          console.log("M2: " + minutes)
         return hours + ":" + minutes
     }
+
+    // function about() {
+    //     var aboutCard = new UI.Card({
+    //         status: false,
+    //         scrollable: true,
+    //         title: "Sports",
+    //         body: "Claudio Rojas 2020" + "\n" + "@itsthered1" + "\n" + "------" + "\n" + "Made in Los Angeles",
+    //       });
+
+    //     aboutCard.show();
+    // }
+    
 });
