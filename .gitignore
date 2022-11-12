@@ -2,6 +2,7 @@
 build/
 node_modules/
 store_assets/
+screenshots/
 .gitignore
 .gitattributes
 TODO.txt
