@@ -11,6 +11,7 @@
   },
   "pebble": {
     "displayName": "Sports",
+    "capabilities": [],
     "uuid": "9e57a249-9a5c-4ded-b374-005a472b8049",
     "sdkVersion": "3",
     "enableMultiJS": true,

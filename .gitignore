@@ -1,2 +1,7 @@
-
-app/.lock-waf_linux2_build
+.vscode/
+build/
+node_modules/
+store_assets/
+.gitignore
+.gitattributes
+TODO.txt

@@ -1,12 +1,11 @@
 Pebble.addEventListener('ready', function() {
 
     require('pebblejs');
-    var UI = require('pebblejs/ui');
-    var Vector2 = require('pebblejs/lib/vector2');
-    var Feature = require('pebblejs/platform/feature');
-    
-    var fetchDate;
+    const UI = require('pebblejs/ui');
+    const Vector2 = require('pebblejs/lib/vector2');
+    const Feature = require('pebblejs/platform/feature');
 
+    var fetchDate; 
 
     var highlightColor = 'vivid-cerulean';
     var highlightText = 'black';
@@ -397,3 +396,4 @@ Pebble.addEventListener('ready', function() {
     // }
     
 });
+
